@@ -11,8 +11,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colorScheme = ColorScheme.fromSeed(
-      seedColor: Color.fromARGB(255, 255, 153, 19),
-      secondary: Color.fromARGB(255, 255, 198, 123),
+      seedColor: Color.fromARGB(255, 29, 255, 17),
+      secondary: Color.fromARGB(255, 242, 142, 49),
       surface: Colors.white,
     );
     final themeData = ThemeData(
@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
       title: 'FlexiFlash',
       debugShowCheckedModeBanner: false,
       theme: themeData,
-      home: const Login(),
+      home: const Register(),
     );
   }
 }

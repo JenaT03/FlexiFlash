@@ -93,10 +93,10 @@ class Register extends StatelessWidget {
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Theme.of(context)
                                   .colorScheme
-                                  .primary, // Màu nền
+                                  .secondary, // Màu nền
                               foregroundColor: Theme.of(context)
                                   .colorScheme
-                                  .onPrimary, // Màu chữ
+                                  .onSecondary, // Màu chữ
 
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 30, vertical: 12),
