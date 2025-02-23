@@ -2,14 +2,14 @@
 
 Học kỳ 2, Năm học 2024-2025
 
-**Tên dự án**:
+**Tên dự án**: Ứng dụng falshcard
 
-**MSSV 1**: 
+**MSSV 1**: B2105569
 
-**Họ tên SV 1**:
+**Họ tên SV 1**: Lê Trương Ngọc Duyên
 
-**MSSV 2**:
+**MSSV 2**: B2111857
 
-**Họ tên SV 2**:
+**Họ tên SV 2**: Trần Yến Nhi
 
-**Lớp học phần**:
+**Lớp học phần**: CT484-01
