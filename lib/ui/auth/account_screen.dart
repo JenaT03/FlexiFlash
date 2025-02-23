@@ -54,7 +54,7 @@ class AccountScreen extends StatelessWidget {
             ),
             LongButton(
               text: 'Bộ thẻ của bạn',
-              icon: Icons.school,
+              icon: Icons.my_library_books_rounded,
               onPressed: () {},
             ),
             const SizedBox(height: 40),
