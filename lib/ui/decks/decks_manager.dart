@@ -16,6 +16,42 @@ class DeckManager with ChangeNotifier {
       imageBg: 'assets/images/bg_toeic.png',
       userId: 'u1',
     ),
+    Deck(
+      id: 'd3',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
+    Deck(
+      id: 'd4',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
+    Deck(
+      id: 'd5',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
+    Deck(
+      id: 'd6',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
+    Deck(
+      id: 'd7',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
+    Deck(
+      id: 'd8',
+      title: 'Từ vựng tiếng Anh TOEIC',
+      imageBg: 'assets/images/bg_img.jpg',
+      userId: 'u1',
+    ),
   ];
 
   // Getter để lấy tất cả deck
