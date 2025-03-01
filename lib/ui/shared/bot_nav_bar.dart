@@ -21,15 +21,15 @@ class BotNavBar extends StatelessWidget {
         elevation: 0, // Bỏ elevation mặc định của BottomNavigationBar
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.my_library_add_rounded),
+            icon: Icon(Icons.add_circle_outline, size: 30),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(Icons.home, size: 30),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.person, size: 30),
             label: '',
           ),
         ],

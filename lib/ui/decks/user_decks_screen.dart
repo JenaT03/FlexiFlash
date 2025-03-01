@@ -10,7 +10,6 @@ class UserDecksScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
       appBar: AppBar(
         // backgroundColor: const Color(0xFFFF9431),
         title: Center(
@@ -23,12 +22,6 @@ class UserDecksScreen extends StatelessWidget {
             ],
           ),
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.dark_mode, color: Colors.black),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [
@@ -46,11 +39,11 @@ class UserDecksScreen extends StatelessWidget {
           const Padding(
             padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
             child: Align(
-              alignment: Alignment.centerLeft,
+              alignment: Alignment.center,
               child: Text(
                 'BỘ THẺ CỦA BẠN',
                 style: TextStyle(
-                  fontSize: 18,
+                  fontSize: 20,
                   fontWeight: FontWeight.bold,
                 ),
               ),

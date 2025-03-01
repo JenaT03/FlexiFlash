@@ -19,22 +19,22 @@ class LongButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: const Color(0xFFFFCBA4),
+          backgroundColor: Theme.of(context).colorScheme.secondary,
+          foregroundColor: Theme.of(context).colorScheme.onSecondary,
           padding: const EdgeInsets.symmetric(vertical: 15),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const SizedBox(width: 15),
-            Icon(icon, color: Colors.black),
+            Icon(
+              icon,
+              color: Theme.of(context).colorScheme.onSecondary,
+            ),
             const SizedBox(width: 10),
             Text(
               text,
               style: const TextStyle(
-                color: Colors.black,
                 fontSize: 16,
               ),
             ),

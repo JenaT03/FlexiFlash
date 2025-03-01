@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class ShortButton extends StatelessWidget {
-  const ShortButton({
+class WarningButton extends StatelessWidget {
+  const WarningButton({
     super.key,
     required this.text,
     this.onPressed,
@@ -21,8 +21,8 @@ class ShortButton extends StatelessWidget {
           child: ElevatedButton(
             onPressed: onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              foregroundColor: Theme.of(context).colorScheme.onSecondary,
+              backgroundColor: Theme.of(context).colorScheme.error,
+              foregroundColor: Theme.of(context).colorScheme.onError,
               padding: const EdgeInsets.symmetric(vertical: 10),
             ),
             child: Text(

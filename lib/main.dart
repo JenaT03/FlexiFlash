@@ -1,35 +1,31 @@
 import 'package:flutter/material.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'ui/screen.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (ctx) => ThemeProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
-
   @override
   Widget build(BuildContext context) {
-    final colorScheme = ColorScheme.fromSeed(
-      seedColor: Color.fromARGB(255, 29, 255, 17),
-      secondary: Color.fromARGB(255, 242, 142, 49),
-      surface: Colors.white,
-    );
-    final themeData = ThemeData(
-      fontFamily: 'Inter',
-      colorScheme: colorScheme,
-      appBarTheme: AppBarTheme(
-        backgroundColor: colorScheme.primary,
-        foregroundColor: colorScheme.onPrimary,
-        elevation: 4,
-        shadowColor: colorScheme.shadow,
-      ),
-    );
+    final themeProvider = context.watch<ThemeProvider>();
     return MaterialApp(
       title: 'FlexiFlash',
       debugShowCheckedModeBanner: false,
-      theme: themeData,
-      home: const Register(),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
+      themeMode: themeProvider.themeMode,
+      home: UserDecksScreen(),
     );
   }
 }
