@@ -1,10 +1,6 @@
-import 'package:ct484_project/ui/decks/add_deck_screen.dart';
-import 'package:ct484_project/ui/decks/decks_overview_screen.dart';
-import 'package:ct484_project/ui/flashcard/add_flashcard_screen.dart';
 import 'package:flutter/material.dart';
 import 'ui/screen.dart';
 import 'package:provider/provider.dart';
-import 'models/deck.dart';
 
 void main() {
   runApp(
@@ -36,6 +32,9 @@ class MyApp extends StatelessWidget {
         UserDecksScreen.routeName: (ctx) => const SafeArea(
               child: UserDecksScreen(),
             ),
+        DecksOverviewScreen.routeName: (ctx) => const SafeArea(
+              child: DecksOverviewScreen(),
+            ),
       },
       onGenerateRoute: (settings) {
         if (settings.name == DeckDetailScreen.routeName) {
@@ -45,7 +44,7 @@ class MyApp extends StatelessWidget {
               builder: (ctx) {
                 return SafeArea(
                   child: DeckDetailScreen(
-                    DeckManager().findById(deckId)!,
+                    DecksManager().findById(deckId)!,
                   ),
                 );
               });

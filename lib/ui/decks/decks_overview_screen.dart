@@ -4,6 +4,8 @@ import '../shared/bot_nav_bar.dart';
 import 'deck_grid.dart';
 
 class DecksOverviewScreen extends StatelessWidget {
+  static const routeName = '/decks';
+
   const DecksOverviewScreen({super.key});
 
   @override

@@ -1,5 +1,5 @@
-import 'package:ct484_project/models/deck.dart';
 import 'package:flutter/material.dart';
+
 import '../../models/deck.dart';
 import '../screen.dart';
 

@@ -21,7 +21,7 @@ class _BotNavBarState extends State<BotNavBar> {
         Navigator.of(context).pushReplacementNamed(UserDecksScreen.routeName);
         break;
       case 1:
-        Navigator.of(context).pushReplacementNamed(UserDecksScreen.routeName);
+        Navigator.of(context).pushReplacementNamed(DecksOverviewScreen.routeName);
         break;
       case 2:
         Navigator.of(context).pushReplacementNamed(AccountScreen.routeName);

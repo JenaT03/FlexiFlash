@@ -18,3 +18,4 @@ export 'shared/theme_provider.dart';
 export 'shared/dialog_utils.dart';
 export 'flashcard/flashcard_grid.dart';
 export 'decks/decks_manager.dart';
+export 'decks/decks_overview_screen.dart';
