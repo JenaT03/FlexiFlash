@@ -1,5 +1,6 @@
 import 'package:ct484_project/models/deck.dart';
 import 'package:flutter/material.dart';
+import '../../models/deck.dart';
 import '../screen.dart';
 
 class DeckDetailScreen extends StatelessWidget {
@@ -31,26 +32,36 @@ class DeckDetailScreen extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           const SizedBox(height: 30),
-          Container(
-            width: 355,
-            height: 210,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: NetworkImage(
-                    "https://images.unsplash.com/photo-1561999564-f49468bc7a93?q=80&w=1933&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"),
-                fit: BoxFit.cover,
+          Stack(
+            children: [
+              Container(
+                width: 355,
+                height: 210,
+                decoration: ShapeDecoration(
+                  image: DecorationImage(
+                    image: NetworkImage(deck.imageBg),
+                    fit: BoxFit.cover,
+                  ),
+                  shape: RoundedRectangleBorder(
+                    side: BorderSide(width: 1, color: Color(0xFFDEDADA)),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
-              shape: RoundedRectangleBorder(
-                side: BorderSide(width: 1, color: Color(0xFFDEDADA)),
-                borderRadius: BorderRadius.circular(20),
+              Positioned(
+                right: 0,
+                child: IconButton(
+                  onPressed: () => {},
+                  icon: FavorIcon(deck),
+                ),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 20),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
-              'Nấm độc tại rừng quốc gia Việt Nam',
+              deck.title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
@@ -59,7 +70,7 @@ class DeckDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          const SizedBox(height: 50),
+          const SizedBox(height: 40),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 18.0),
             child: LongButton(
@@ -69,15 +80,15 @@ class DeckDetailScreen extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 18.0, right: 18.0, left: 18.0),
+            padding: const EdgeInsets.only(top: 10.0, right: 18.0, left: 18.0),
             child: LongButton(
-              text: 'Ghép thẻ',
-              icon: Icons.polyline_rounded,
+              text: 'Xem tất cả thẻ yêu thích',
+              icon: Icons.favorite,
               onPressed: () {},
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 18.0, right: 18.0, left: 18.0),
+            padding: const EdgeInsets.only(top: 10.0, right: 18.0, left: 18.0),
             child: LongButton(
               text: 'Trắc nghiệm hình ảnh',
               icon: Icons.ads_click,
@@ -103,6 +114,63 @@ class DeckDetailScreen extends StatelessWidget {
       bottomNavigationBar:
           // Bottom Navigation Bar
           const BotNavBar(),
+    );
+  }
+}
+
+class FavorIcon extends StatefulWidget {
+  const FavorIcon(
+    this.deck, {
+    super.key,
+  });
+
+  final Deck deck;
+
+  @override
+  State<FavorIcon> createState() => _FavorIconState();
+}
+
+class _FavorIconState extends State<FavorIcon> {
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      onPressed: () {
+        setState(() {
+          widget.deck.isFavorite = !widget.deck.isFavorite;
+        });
+      },
+      icon: Icon(
+        widget.deck.isFavorite ? Icons.favorite : Icons.favorite_border,
+        color: widget.deck.isFavorite
+            ? Colors.white
+            : Theme.of(context).colorScheme.secondary,
+      ),
+      label: Text(
+        "Yêu thích",
+        textAlign: TextAlign.center,
+        style: TextStyle(
+          color: widget.deck.isFavorite
+              ? Colors.white
+              : Theme.of(context).colorScheme.secondary,
+          fontSize: 12,
+        ),
+      ),
+      style: ElevatedButton.styleFrom(
+        elevation: 0, // Không đổ bóng
+        backgroundColor: widget.deck.isFavorite
+            ? Theme.of(context).colorScheme.secondary
+            : const Color.fromARGB(78, 253, 253, 253),
+        side: BorderSide(
+          color: widget.deck.isFavorite
+              ? Colors.white
+              : Theme.of(context).colorScheme.secondary,
+          width: 1,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(20.0)),
+        ),
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      ),
     );
   }
 }

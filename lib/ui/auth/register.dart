@@ -60,12 +60,14 @@ class Register extends StatelessWidget {
                         children: [
                           TextField(
                             decoration: InputDecoration(
-                                labelText: "Email",
-                                border: UnderlineInputBorder(),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                )),
+                              labelText: "Email",
+                              border: UnderlineInputBorder(),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              filled: false,
+                            ),
                           ),
                           TextField(
                             decoration: InputDecoration(
@@ -75,6 +77,7 @@ class Register extends StatelessWidget {
                                 borderSide: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
+                              filled: false,
                             ),
                             obscureText: true,
                           ),
@@ -86,6 +89,7 @@ class Register extends StatelessWidget {
                                 borderSide: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
+                              filled: false,
                             ),
                             obscureText: true,
                           ),

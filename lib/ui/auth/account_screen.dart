@@ -54,7 +54,7 @@ class AccountScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Text(
-                  "Chế độ tối",
+                  "Chế độ",
                   style: TextStyle(
                       fontSize: 18,
                       color: Theme.of(context).colorScheme.onSurface),

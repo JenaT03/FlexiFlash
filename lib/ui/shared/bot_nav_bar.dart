@@ -48,15 +48,27 @@ class _BotNavBarState extends State<BotNavBar> {
         elevation: 0, // Bỏ elevation mặc định của BottomNavigationBar
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle_outline, size: 30),
+            icon: Icon(
+              Icons.add_circle_outline,
+              size: 30,
+              color: Color(0xFF919191),
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 30),
+            icon: Icon(
+              Icons.home,
+              size: 30,
+              color: Color(0xFF919191),
+            ),
             label: '',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 30),
+            icon: Icon(
+              Icons.person,
+              size: 30,
+              color: Color(0xFF919191),
+            ),
             label: '',
           ),
         ],
