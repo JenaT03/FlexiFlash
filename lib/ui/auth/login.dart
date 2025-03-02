@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
 class Login extends StatelessWidget {
+  static const routeName = '/login';
+
   const Login({super.key});
 
   @override

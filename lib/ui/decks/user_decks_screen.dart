@@ -5,6 +5,8 @@ import '../shared/long_button.dart';
 import 'deck_grid.dart';
 
 class UserDecksScreen extends StatelessWidget {
+  static const routeName = '/user_decks';
+
   const UserDecksScreen({super.key});
 
   @override

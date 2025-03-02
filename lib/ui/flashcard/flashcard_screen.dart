@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../screen.dart';
 
 class FlashcardScreen extends StatelessWidget {
+  static const routeName = '/flashcard';
+
   const FlashcardScreen({super.key});
 
   @override

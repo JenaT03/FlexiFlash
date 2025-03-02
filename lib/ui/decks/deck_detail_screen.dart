@@ -1,8 +1,13 @@
+import 'package:ct484_project/models/deck.dart';
 import 'package:flutter/material.dart';
 import '../screen.dart';
 
-class DeckScreen extends StatelessWidget {
-  const DeckScreen({super.key});
+class DeckDetailScreen extends StatelessWidget {
+  static const routeName = '/deck_detail';
+
+  const DeckDetailScreen(this.deck, {super.key});
+
+  final Deck deck;
 
   @override
   Widget build(BuildContext context) {

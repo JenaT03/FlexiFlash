@@ -25,7 +25,30 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeProvider.themeMode,
-      home: UserDecksScreen(),
+      home: const UserDecksScreen(),
+      routes: {
+        AccountScreen.routeName: (ctx) => const SafeArea(
+              child: AccountScreen(),
+            ),
+        UserDecksScreen.routeName: (ctx) => const SafeArea(
+              child: UserDecksScreen(),
+            ),
+      },
+      onGenerateRoute: (settings) {
+        if (settings.name == DeckDetailScreen.routeName) {
+          final deckId = settings.arguments as String;
+          return MaterialPageRoute(
+              settings: settings,
+              builder: (ctx) {
+                return SafeArea(
+                  child: DeckDetailScreen(
+                    DeckManager().findById(deckId)!,
+                  ),
+                );
+              });
+        }
+        return null;
+      },
     );
   }
 }
