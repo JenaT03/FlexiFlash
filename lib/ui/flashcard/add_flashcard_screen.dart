@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../decks/decks_manager.dart';
-import '../../models/deck.dart';
+import '../flashcard/flashcards_manager.dart';
+import '../../models/flashcard.dart';
 import '../screen.dart';
 
-class EditDeckScreen extends StatefulWidget {
-  EditDeckScreen(Deck deck, {super.key}) {
-    this.deck = deck;
+class AddFlashCardScreen extends StatefulWidget {
+  AddFlashCardScreen(Flashcard? flashcard, {super.key}) {
+    this.flashcard = Flashcard(text: '', imgURL: '', deckId: '');
   }
-  late final Deck deck;
+  late final Flashcard flashcard;
   @override
-  State<EditDeckScreen> createState() => _EditDeckScreenState();
+  State<AddFlashCardScreen> createState() => _AddFlashCardScreenState();
 }
 
-class _EditDeckScreenState extends State<EditDeckScreen> {
+class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   final _imageUrlController = TextEditingController();
   final _imageUrlFocusNode = FocusNode();
-  final _editForm = GlobalKey<FormState>();
-  late Deck _editedDeck;
+  final _addForm = GlobalKey<FormState>();
+  late Flashcard _addedflashcard;
 
   bool _isValidImageUrl(String value) {
     return (value.startsWith('http') || value.startsWith('https')) &&
@@ -36,8 +36,8 @@ class _EditDeckScreenState extends State<EditDeckScreen> {
         setState(() {});
       }
     });
-    _editedDeck = widget.deck;
-    _imageUrlController.text = _editedDeck.imageBg;
+    _addedflashcard = widget.flashcard;
+    _imageUrlController.text = _addedflashcard.imgURL;
     super.initState();
   }
 
@@ -65,8 +65,8 @@ class _EditDeckScreenState extends State<EditDeckScreen> {
         margin: EdgeInsets.only(top: 40, left: 10, right: 10),
         child: Column(
           children: [
-            const Text(
-              'CHỈNH SỬA BỘ THẺ',
+            Text(
+              'Tên bộ thẻ'.toUpperCase(),
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -74,35 +74,46 @@ class _EditDeckScreenState extends State<EditDeckScreen> {
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 40),
-            Form(
-              child: ListView(
-                children: <Widget>[
-                  _buildTitleDeck(),
-                  _buildImageURLField(),
-                ],
+            Expanded(
+              child: Form(
+                child: ListView(
+                  children: <Widget>[
+                    _buildTitleflashcard(),
+                    const SizedBox(height: 10),
+                    _buildImageURLField(),
+                    _buildDescriptionField()
+                  ],
+                ),
               ),
             ),
+            const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ShortButton(
-                  text: "Lưu",
+                  text: "Hoàn thành",
+                  onPressed: () => {},
+                ),
+                ShortButton(
+                  text: "Tiếp tục",
                   onPressed: _saveForm,
                 ),
               ],
-            ),
-
-            //List các flashcard
+            )
           ],
         ),
       ),
     );
   }
 
-  TextFormField _buildTitleDeck() {
+  TextFormField _buildTitleflashcard() {
     return TextFormField(
-      initialValue: _editedDeck.title,
-      decoration: const InputDecoration(labelText: 'Tên bộ thẻ'),
+      initialValue: '',
+      decoration: const InputDecoration(
+        labelText: 'Tên thẻ',
+        filled: false,
+        border: UnderlineInputBorder(),
+      ),
       textInputAction: TextInputAction.next,
       autofocus: true,
       validator: (value) {
@@ -112,14 +123,18 @@ class _EditDeckScreenState extends State<EditDeckScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedDeck = _editedDeck.copyWith(title: value);
+        _addedflashcard = _addedflashcard.copyWith(text: value);
       },
     );
   }
 
   TextFormField _buildImageURLField() {
     return TextFormField(
-      decoration: const InputDecoration(labelText: 'Đường dẫn ảnh nền'),
+      decoration: const InputDecoration(
+        labelText: 'Đường dẫn ảnh minh họa',
+        filled: false,
+        border: UnderlineInputBorder(),
+      ),
       keyboardType: TextInputType.url,
       textInputAction: TextInputAction.done,
       controller: _imageUrlController,
@@ -135,22 +150,38 @@ class _EditDeckScreenState extends State<EditDeckScreen> {
         return null;
       },
       onSaved: (value) {
-        _editedDeck = _editedDeck.copyWith(imageBg: value);
+        _addedflashcard = _addedflashcard.copyWith(imgURL: value);
+      },
+    );
+  }
+
+  TextFormField _buildDescriptionField() {
+    return TextFormField(
+      initialValue: '',
+      decoration: const InputDecoration(
+        labelText: 'Mô tả',
+        filled: false,
+        border: UnderlineInputBorder(),
+      ),
+      maxLines: 4,
+      keyboardType: TextInputType.multiline,
+      onSaved: (value) {
+        _addedflashcard = _addedflashcard.copyWith(description: value);
       },
     );
   }
 
   Future<void> _saveForm() async {
-    final isValid = _editForm.currentState!.validate();
+    final isValid = _addForm.currentState!.validate();
     if (!isValid) {
       return;
     }
 
-    _editForm.currentState!.save();
+    _addForm.currentState!.save();
     try {
-      final deckManager = context.read<DecksManager>();
+      final flashcardManager = context.read<FlashcardManager>();
 
-      deckManager.updateDeck(_editedDeck);
+      flashcardManager.addFlashcard(_addedflashcard);
     } catch (error) {
       await showErrorDialog(context, 'Có lỗi xảy ra');
     }

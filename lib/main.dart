@@ -1,7 +1,10 @@
+import 'package:ct484_project/ui/decks/add_deck_screen.dart';
+import 'package:ct484_project/ui/decks/decks_overview_screen.dart';
+import 'package:ct484_project/ui/flashcard/add_flashcard_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'ui/screen.dart';
 import 'package:provider/provider.dart';
+import 'models/deck.dart';
 
 void main() {
   runApp(
@@ -25,7 +28,7 @@ class MyApp extends StatelessWidget {
       theme: AppTheme.light,
       darkTheme: AppTheme.dark,
       themeMode: themeProvider.themeMode,
-      home: UserDecksScreen(),
+      home: AccountScreen(),
     );
   }
 }

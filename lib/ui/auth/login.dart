@@ -50,7 +50,7 @@ class Login extends StatelessWidget {
                       margin: const EdgeInsets.symmetric(horizontal: 20),
                       padding: const EdgeInsets.all(20),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.8),
+                        color: Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Column(
@@ -58,12 +58,14 @@ class Login extends StatelessWidget {
                         children: [
                           TextField(
                             decoration: InputDecoration(
-                                labelText: "Email",
-                                border: UnderlineInputBorder(),
-                                focusedBorder: UnderlineInputBorder(
-                                  borderSide: BorderSide(
-                                      color: Theme.of(context).primaryColor),
-                                )),
+                              labelText: "Email",
+                              border: UnderlineInputBorder(),
+                              focusedBorder: UnderlineInputBorder(
+                                borderSide: BorderSide(
+                                    color: Theme.of(context).primaryColor),
+                              ),
+                              filled: false,
+                            ),
                           ),
                           TextField(
                             decoration: InputDecoration(
@@ -73,6 +75,7 @@ class Login extends StatelessWidget {
                                 borderSide: BorderSide(
                                     color: Theme.of(context).primaryColor),
                               ),
+                              filled: false,
                             ),
                             obscureText: true,
                           ),
