@@ -60,7 +60,7 @@ class UserDecksScreen extends StatelessWidget {
       ),
       bottomNavigationBar:
           // Bottom Navigation Bar
-          const BotNavBar(),
+          const BotNavBar(initialIndex: 0),
     );
   }
 }

@@ -2,14 +2,22 @@ import 'package:ct484_project/ui/screen.dart';
 import 'package:flutter/material.dart';
 
 class BotNavBar extends StatefulWidget {
-  const BotNavBar({super.key});
+  const BotNavBar({super.key, required this.initialIndex});
+
+  final int initialIndex;
 
   @override
   State<BotNavBar> createState() => _BotNavBarState();
 }
 
 class _BotNavBarState extends State<BotNavBar> {
-  int _currentIndex = 1; // Mặc định chọn Home
+  late int _currentIndex;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentIndex = widget.initialIndex;
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -21,7 +29,8 @@ class _BotNavBarState extends State<BotNavBar> {
         Navigator.of(context).pushReplacementNamed(UserDecksScreen.routeName);
         break;
       case 1:
-        Navigator.of(context).pushReplacementNamed(DecksOverviewScreen.routeName);
+        Navigator.of(context)
+            .pushReplacementNamed(DecksOverviewScreen.routeName);
         break;
       case 2:
         Navigator.of(context).pushReplacementNamed(AccountScreen.routeName);
@@ -38,20 +47,21 @@ class _BotNavBarState extends State<BotNavBar> {
             color: Colors.grey.withOpacity(0.3),
             spreadRadius: 1,
             blurRadius: 10,
-            offset: const Offset(0, -5), // Đổ bóng hướng lên trên
+            offset: const Offset(0, -5),
           ),
         ],
       ),
       child: BottomNavigationBar(
         currentIndex: _currentIndex,
         onTap: _onItemTapped,
-        elevation: 0, // Bỏ elevation mặc định của BottomNavigationBar
+        elevation: 0,
+        showSelectedLabels: false,
+        showUnselectedLabels: false,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
               Icons.add_circle_outline,
               size: 30,
-              color: Color(0xFF919191),
             ),
             label: '',
           ),
@@ -59,7 +69,6 @@ class _BotNavBarState extends State<BotNavBar> {
             icon: Icon(
               Icons.home,
               size: 30,
-              color: Color(0xFF919191),
             ),
             label: '',
           ),
@@ -67,7 +76,6 @@ class _BotNavBarState extends State<BotNavBar> {
             icon: Icon(
               Icons.person,
               size: 30,
-              color: Color(0xFF919191),
             ),
             label: '',
           ),

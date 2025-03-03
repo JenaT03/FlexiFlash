@@ -69,7 +69,7 @@ class DecksOverviewScreen extends StatelessWidget {
           ],
         ),
       ),
-      bottomNavigationBar: const BotNavBar(),
+      bottomNavigationBar: const BotNavBar(initialIndex: 1),
     );
   }
 }
