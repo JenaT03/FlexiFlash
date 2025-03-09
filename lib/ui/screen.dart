@@ -19,3 +19,5 @@ export 'shared/dialog_utils.dart';
 export 'flashcard/flashcard_grid.dart';
 export 'decks/decks_manager.dart';
 export 'decks/decks_overview_screen.dart';
+
+export 'splash_screen.dart';
