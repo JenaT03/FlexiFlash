@@ -1,9 +1,52 @@
-import 'package:flutter/material.dart';
+import 'dart:developer' show log;
 
-class Login extends StatelessWidget {
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import 'auth_manager.dart';
+import '../shared/dialog_utils.dart';
+
+class Login extends StatefulWidget {
   static const routeName = '/login';
 
   const Login({super.key});
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+  final _isSubmitting = ValueNotifier<bool>(false);
+  final _passwordController = TextEditingController();
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState!.save();
+
+    _isSubmitting.value = true;
+
+    try {
+      // Log user in
+      await context.read<AuthManager>().login(
+            _authData['email']!,
+            _authData['password']!,
+          );
+    } catch (error) {
+      log('$error');
+      if (mounted) {
+        showErrorDialog(context, error.toString());
+      }
+    }
+
+    _isSubmitting.value = false;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,65 +98,45 @@ class Login extends StatelessWidget {
                         color: Colors.white.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                              border: UnderlineInputBorder(),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              filled: false,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            _buildEmailField(),
+                            const SizedBox(height: 25),
+                            _buildPasswordField(),
+                            const SizedBox(height: 30),
+                            ValueListenableBuilder<bool>(
+                              valueListenable: _isSubmitting,
+                              builder: (context, isSubmitting, child) {
+                                if (isSubmitting) {
+                                  return const CircularProgressIndicator();
+                                }
+                                return _buildSubmitButton();
+                              },
                             ),
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Mật khẩu",
-                              border: UnderlineInputBorder(),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              filled: false,
-                            ),
-                            obscureText: true,
-                          ),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor:
-                                  Theme.of(context).colorScheme.secondary,
-                              foregroundColor:
-                                  Theme.of(context).colorScheme.onSecondary,
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 12),
-                            ),
-                            child: const Text("ĐĂNG NHẬP"),
-                          ),
-                          const SizedBox(height: 40),
-                          RichText(
-                            text: TextSpan(
-                              text: "Nếu bạn chưa có tài khoản hãy ",
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.black),
-                              children: const <TextSpan>[
-                                TextSpan(
-                                  text: "Đăng ký",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.black,
+                            const SizedBox(height: 40),
+                            RichText(
+                              text: TextSpan(
+                                text: "Nếu bạn chưa có tài khoản hãy ",
+                                style: TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                                children: const <TextSpan>[
+                                  TextSpan(
+                                    text: "Đăng ký",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -123,6 +146,65 @@ class Login extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: _submit,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+      ),
+      child: const Text("ĐĂNG NHẬP"),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Email",
+        border: UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        filled: false,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value!.isEmpty || !value.contains('@')) {
+          return 'Email không hợp lệ!';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _authData['email'] = value!;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Mật khẩu",
+        border: UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        filled: false,
+      ),
+      obscureText: true,
+      controller: _passwordController,
+      validator: (value) {
+        if (value == null || value.length < 8) {
+          return 'Mật khẩu phải có ít nhất 8 ký tự!';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _authData['password'] = value!;
+      },
     );
   }
 }
