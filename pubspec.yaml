@@ -15,7 +15,10 @@ dependencies:
   provider: ^6.1.2
   flex_color_scheme: ^8.1.1
   flutter_switch: ^0.3.2
+  flutter_dotenv: ^5.2.1
+  dio: ^5.4.0
   shared_preferences: ^2.2.2
+  http: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -25,6 +28,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/images/
   fonts:
     - family: Inter
