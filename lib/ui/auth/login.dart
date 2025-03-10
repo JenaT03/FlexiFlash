@@ -1,6 +1,7 @@
 import 'dart:developer' show log;
 
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 
 import 'auth_manager.dart';
@@ -8,8 +9,9 @@ import '../shared/dialog_utils.dart';
 
 class Login extends StatefulWidget {
   static const routeName = '/login';
+  final VoidCallback onRegisterTap; // Nhận hàm onRegisterTap từ AuthScreen
 
-  const Login({super.key});
+  const Login({super.key, required this.onRegisterTap});
 
   @override
   State<Login> createState() => _LoginState();
@@ -119,18 +121,21 @@ class _LoginState extends State<Login> {
                             const SizedBox(height: 40),
                             RichText(
                               text: TextSpan(
-                                text: "Nếu bạn chưa có tài khoản hãy ",
-                                style: TextStyle(
+                                text: "Nếu bạn chưa có tài khoản, hãy ",
+                                style: const TextStyle(
                                     fontSize: 14, color: Colors.black),
-                                children: const <TextSpan>[
+                                children: <TextSpan>[
                                   TextSpan(
                                     text: "Đăng ký",
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                       fontSize: 14,
                                       fontWeight: FontWeight.bold,
                                       decoration: TextDecoration.underline,
                                       color: Colors.black,
                                     ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = widget
+                                          .onRegisterTap, // Gọi hàm onRegisterTap từ widget
                                   ),
                                 ],
                               ),

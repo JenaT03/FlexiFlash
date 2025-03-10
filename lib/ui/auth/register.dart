@@ -1,10 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 
-class Register extends StatelessWidget {
+import 'auth_manager.dart';
+import '../shared/dialog_utils.dart';
+
+class Register extends StatefulWidget {
   static const routeName = '/register';
+  final VoidCallback onLoginTap; // Nhận hàm onLoginTap từ AuthScreen
 
-  const Register({super.key});
+  const Register({super.key, required this.onLoginTap});
 
+  @override
+  State<Register> createState() => _RegisterState();
+}
+
+class _RegisterState extends State<Register> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -112,18 +123,21 @@ class Register extends StatelessWidget {
                           const SizedBox(height: 40),
                           RichText(
                             text: TextSpan(
-                              text: "Nếu bạn đã có tài khoản hãy ",
-                              style:
-                                  TextStyle(fontSize: 14, color: Colors.black),
-                              children: const <TextSpan>[
+                              text: "Nếu bạn đã có tài khoản, hãy ",
+                              style: const TextStyle(
+                                  fontSize: 14, color: Colors.black),
+                              children: <TextSpan>[
                                 TextSpan(
                                   text: "Đăng nhập",
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     fontSize: 14,
                                     fontWeight: FontWeight.bold,
                                     decoration: TextDecoration.underline,
                                     color: Colors.black,
                                   ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = widget
+                                        .onLoginTap, // Gọi hàm onLoginTap từ widget
                                 ),
                               ],
                             ),

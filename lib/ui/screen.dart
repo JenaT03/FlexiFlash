@@ -21,3 +21,4 @@ export 'decks/decks_manager.dart';
 export 'decks/decks_overview_screen.dart';
 
 export 'splash_screen.dart';
+export 'auth/auth_screen.dart';

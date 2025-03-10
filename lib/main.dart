@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
                     builder: (ctx, snapshot) {
                       return snapshot.connectionState == ConnectionState.waiting
                           ? const SafeArea(child: SplashScreen())
-                          : const SafeArea(child: Login());
+                          : const SafeArea(child: AuthScreen());
                     },
                   ),
             routes: {
