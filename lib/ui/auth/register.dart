@@ -1,3 +1,5 @@
+import 'dart:developer' show log;
+
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
@@ -16,6 +18,38 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final GlobalKey<FormState> _formKey = GlobalKey();
+  final Map<String, String> _authData = {
+    'email': '',
+    'password': '',
+  };
+  final _isSubmitting = ValueNotifier<bool>(false);
+  final _passwordController = TextEditingController();
+
+  Future<void> _submit() async {
+    if (!_formKey.currentState!.validate()) {
+      return;
+    }
+    _formKey.currentState!.save();
+
+    _isSubmitting.value = true;
+
+    try {
+      // Register
+      await context.read<AuthManager>().register(
+            _authData['email']!,
+            _authData['password']!,
+          );
+    } catch (error) {
+      log('$error');
+      if (mounted) {
+        showErrorDialog(context, error.toString());
+      }
+    }
+
+    _isSubmitting.value = false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,83 +100,50 @@ class _RegisterState extends State<Register> {
                         color: Colors.white.withOpacity(0.8),
                         borderRadius: BorderRadius.circular(20),
                       ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Email",
-                              border: UnderlineInputBorder(),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              filled: false,
+                      child: Form(
+                        key: _formKey,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: <Widget>[
+                            _buildEmailField(),
+                            const SizedBox(height: 10),
+                            _buildPasswordField(),
+                            const SizedBox(height: 10),
+                            _buildPasswordConfirmField(),
+                            const SizedBox(height: 30),
+                            ValueListenableBuilder<bool>(
+                              valueListenable: _isSubmitting,
+                              builder: (context, isSubmitting, child) {
+                                if (isSubmitting) {
+                                  return const CircularProgressIndicator();
+                                }
+                                return _buildSubmitButton();
+                              },
                             ),
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Mật khẩu",
-                              border: UnderlineInputBorder(),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              filled: false,
-                            ),
-                            obscureText: true,
-                          ),
-                          TextField(
-                            decoration: InputDecoration(
-                              labelText: "Nhập lại mật khẩu",
-                              border: UnderlineInputBorder(),
-                              focusedBorder: UnderlineInputBorder(
-                                borderSide: BorderSide(
-                                    color: Theme.of(context).primaryColor),
-                              ),
-                              filled: false,
-                            ),
-                            obscureText: true,
-                          ),
-                          const SizedBox(height: 30),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .secondary, // Màu nền
-                              foregroundColor: Theme.of(context)
-                                  .colorScheme
-                                  .onSecondary, // Màu chữ
-
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 30, vertical: 12),
-                            ),
-                            child: const Text("ĐĂNG KÝ"),
-                          ),
-                          const SizedBox(height: 40),
-                          RichText(
-                            text: TextSpan(
-                              text: "Nếu bạn đã có tài khoản, hãy ",
-                              style: const TextStyle(
-                                  fontSize: 14, color: Colors.black),
-                              children: <TextSpan>[
-                                TextSpan(
-                                  text: "Đăng nhập",
-                                  style: const TextStyle(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold,
-                                    decoration: TextDecoration.underline,
-                                    color: Colors.black,
+                            const SizedBox(height: 40),
+                            RichText(
+                              text: TextSpan(
+                                text: "Nếu bạn đã có tài khoản, hãy ",
+                                style: const TextStyle(
+                                    fontSize: 14, color: Colors.black),
+                                children: <TextSpan>[
+                                  TextSpan(
+                                    text: "Đăng nhập",
+                                    style: const TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      decoration: TextDecoration.underline,
+                                      color: Colors.black,
+                                    ),
+                                    recognizer: TapGestureRecognizer()
+                                      ..onTap = widget
+                                          .onLoginTap, // Gọi hàm onLoginTap từ widget
                                   ),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = widget
-                                        .onLoginTap, // Gọi hàm onLoginTap từ widget
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     )
                   ],
@@ -152,6 +153,85 @@ class _RegisterState extends State<Register> {
           ),
         ],
       ),
+    );
+  }
+
+  Widget _buildSubmitButton() {
+    return ElevatedButton(
+      onPressed: _submit,
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Theme.of(context).colorScheme.secondary,
+        foregroundColor: Theme.of(context).colorScheme.onSecondary,
+        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
+      ),
+      child: const Text("ĐĂNG KÝ"),
+    );
+  }
+
+  Widget _buildEmailField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Email",
+        border: UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        filled: false,
+      ),
+      keyboardType: TextInputType.emailAddress,
+      validator: (value) {
+        if (value!.isEmpty || !value.contains('@')) {
+          return 'Email không hợp lệ!';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _authData['email'] = value!;
+      },
+    );
+  }
+
+  Widget _buildPasswordField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Mật khẩu",
+        border: UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        filled: false,
+      ),
+      obscureText: true,
+      controller: _passwordController,
+      validator: (value) {
+        if (value == null || value.length < 8) {
+          return 'Mật khẩu phải có ít nhất 8 ký tự!';
+        }
+        return null;
+      },
+      onSaved: (value) {
+        _authData['password'] = value!;
+      },
+    );
+  }
+
+  Widget _buildPasswordConfirmField() {
+    return TextFormField(
+      decoration: InputDecoration(
+        labelText: "Nhập lại mật khẩu",
+        border: UnderlineInputBorder(),
+        focusedBorder: UnderlineInputBorder(
+          borderSide: BorderSide(color: Theme.of(context).primaryColor),
+        ),
+        filled: false,
+      ),
+      obscureText: true,
+      validator: (value) {
+        if (value != _passwordController.text) {
+          return 'Mật khẩu không khớp!';
+        }
+        return null;
+      },
     );
   }
 }
