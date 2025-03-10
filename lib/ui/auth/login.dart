@@ -106,7 +106,7 @@ class _LoginState extends State<Login> {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             _buildEmailField(),
-                            const SizedBox(height: 25),
+                            const SizedBox(height: 10),
                             _buildPasswordField(),
                             const SizedBox(height: 30),
                             ValueListenableBuilder<bool>(
