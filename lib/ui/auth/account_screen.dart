@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import '../screen.dart';
+import '../auth/auth_manager.dart';
 
 class AccountScreen extends StatelessWidget {
-   static const routeName = '/account';
+  static const routeName = '/account';
 
   const AccountScreen({super.key});
   @override
@@ -65,7 +68,14 @@ class AccountScreen extends StatelessWidget {
             const SizedBox(height: 40),
             WarningButton(
               text: 'Đăng xuất',
-              onPressed: () {},
+              onPressed: () {
+                // Đăng xuất
+                context.read<AuthManager>().logout();
+                // Pop màn hình hiện tại
+                Navigator.of(context).pop();
+                // Sau đó push màn hình mới (không dùng replacement)
+                Navigator.of(context).pushNamed('/');
+              },
             ),
             const Spacer(),
           ],
@@ -73,7 +83,9 @@ class AccountScreen extends StatelessWidget {
       ),
       bottomNavigationBar:
           // Bottom Navigation Bar
-          const BotNavBar(initialIndex: 2,),
+          const BotNavBar(
+        initialIndex: 2,
+      ),
     );
   }
 }
