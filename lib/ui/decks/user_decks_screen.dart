@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../shared/bot_nav_bar.dart';
 import '../shared/long_button.dart';
 import 'deck_grid.dart';
+import 'add_deck_screen.dart';
 
 class UserDecksScreen extends StatelessWidget {
   static const routeName = '/user_decks';
@@ -33,7 +34,9 @@ class UserDecksScreen extends StatelessWidget {
             child: LongButton(
               text: 'Tạo bộ thẻ mới',
               icon: Icons.my_library_add_rounded,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(AddDeckScreen.routeName);
+              },
             ),
           ),
 

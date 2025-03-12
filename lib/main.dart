@@ -26,6 +26,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => AuthManager(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => DecksManager(),
+        ),
       ],
       child: Consumer<AuthManager>(
         builder: (ctx, authManager, child) {
@@ -64,8 +67,17 @@ class MyApp extends StatelessWidget {
                     builder: (ctx) {
                       return SafeArea(
                         child: DeckDetailScreen(
-                          DecksManager().findById(deckId)!,
+                          ctx.read<DecksManager>().findById(deckId)!,
                         ),
+                      );
+                    });
+              }
+              if (settings.name == AddDeckScreen.routeName) {
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (ctx) {
+                      return SafeArea(
+                        child: AddDeckScreen(),
                       );
                     });
               }

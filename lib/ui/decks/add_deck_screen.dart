@@ -4,11 +4,13 @@ import '../decks/decks_manager.dart';
 import '../../models/deck.dart';
 import '../screen.dart';
 
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 class AddDeckScreen extends StatefulWidget {
-  AddDeckScreen(Deck? deck, {super.key}) {
-    this.deck = Deck(id: null, title: '', imageBg: '', userId: '');
-  }
-  late final Deck deck;
+  static const routeName = '/add_deck';
+  AddDeckScreen({super.key});
+  final Deck deck = Deck(title: '', type: '');
   @override
   State<AddDeckScreen> createState() => _AddDeckScreenState();
 }
@@ -76,11 +78,14 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
             const SizedBox(height: 40),
             Expanded(
               child: Form(
+                key: _addForm,
                 child: ListView(
                   children: <Widget>[
                     _buildTitleDeck(),
-                    const SizedBox(height: 10),
-                    _buildImageURLField(),
+                    const SizedBox(height: 20),
+                    _buildSelectType(),
+                    const SizedBox(height: 20),
+                    _buildProductPreview(),
                   ],
                 ),
               ),
@@ -123,43 +128,98 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
     );
   }
 
-  TextFormField _buildImageURLField() {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Đường dẫn ảnh nền',
+  Widget _buildSelectType() {
+    return DropdownButtonFormField<String>(
+      decoration: InputDecoration(
+        labelText: "Chọn chủ đề",
         filled: false,
-        border: UnderlineInputBorder(),
+        border: OutlineInputBorder(),
       ),
-      keyboardType: TextInputType.url,
-      textInputAction: TextInputAction.done,
-      controller: _imageUrlController,
-      focusNode: _imageUrlFocusNode,
-      onFieldSubmitted: (value) => _saveForm(),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Không được để trống';
-        }
-        if (!_isValidImageUrl(value)) {
-          return 'Hãy nhập đường dẫn chính xác';
-        }
-        return null;
+      items: const [
+        DropdownMenuItem(value: "Sinh học", child: Text("Sinh học")),
+        DropdownMenuItem(value: "Vật lý", child: Text("Vật lý")),
+        DropdownMenuItem(value: "Hóa học", child: Text("Hóa học")),
+        DropdownMenuItem(value: "Lịch sử", child: Text("Lịch sử")),
+        DropdownMenuItem(value: "Địa lý", child: Text("Địa lý")),
+      ],
+      validator: (value) => value == null ? 'Vui lòng chọn một giá trị' : null,
+      onChanged: (value) {
+        setState(() {});
       },
       onSaved: (value) {
-        _addedDeck = _addedDeck.copyWith(imageBg: value);
+        _addedDeck = _addedDeck.copyWith(type: value);
+      },
+    );
+  }
+
+  Widget _buildProductPreview() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.only(top: 8, right: 10),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.grey),
+          ),
+          child: !_addedDeck.hasFeaturedImage()
+              ? const Center(child: Text('Trống'))
+              : FittedBox(
+                  child: Image.file(
+                    _addedDeck.featuredImage!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        ),
+        Expanded(
+          child: SizedBox(
+            height: 100,
+            child: _buildImagePickerButton(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  TextButton _buildImagePickerButton() {
+    return TextButton.icon(
+      icon: const Icon(Icons.image),
+      label: const Text('Chọn hình ảnh'),
+      onPressed: () async {
+        final imagePicker = ImagePicker();
+        try {
+          final imageFile =
+              await imagePicker.pickImage(source: ImageSource.gallery);
+          if (imageFile == null) {
+            return;
+          }
+          _addedDeck = _addedDeck.copyWith(
+            featuredImage: File(imageFile.path),
+            imageBg: imageFile.path,
+          );
+          setState(() {});
+        } catch (error) {
+          if (mounted) {
+            showErrorDialog(context, 'Something went wrong');
+          }
+        }
       },
     );
   }
 
   Future<void> _saveForm() async {
     final isValid = _addForm.currentState!.validate();
+
     if (!isValid) {
       return;
     }
-
     _addForm.currentState!.save();
+    final File? ex = _addedDeck.featuredImage;
+    print('_addedDeck $ex');
+
     try {
       final deckManager = context.read<DecksManager>();
-
       deckManager.addDeck(_addedDeck);
     } catch (error) {
       await showErrorDialog(context, 'Có lỗi xảy ra');
@@ -175,7 +235,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         context: context,
         builder: (ctx) => AlertDialog(
                 icon: const Icon(Icons.error),
-                title: const Text('Lỗi trong quá trính lưu!'),
+                title: const Text('Lỗi trong quá trình lưu!'),
                 content: Text(message),
                 actions: <Widget>[
                   ActionButton(

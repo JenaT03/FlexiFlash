@@ -17,12 +17,9 @@ class DeckDetailScreen extends StatelessWidget {
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 12),
-              child: Image.asset(
-                'assets/images/logo.png',
-                height: 36,
-              ),
+            Image.asset(
+              'assets/images/logo.png',
+              height: 36,
             ),
           ],
         ),

@@ -1,8 +1,10 @@
 import '../../models/deck.dart';
 
 import 'package:flutter/foundation.dart';
+import '../../services/decks_service.dart';
 
 class DecksManager with ChangeNotifier {
+  final DecksService _decksService = DecksService();
   final List<Deck> _decks = [
     Deck(
       id: 'd1',
@@ -64,8 +66,12 @@ class DecksManager with ChangeNotifier {
     return _decks.where((deck) => deck.isFavorite).toList();
   }
 
-  Deck findById(String id) {
-    return _decks.firstWhere((deck) => deck.id == id);
+  Deck? findById(String id) {
+    try {
+      return _decks.firstWhere((deck) => deck.id == id);
+    } catch (error) {
+      return null;
+    }
   }
 
   // Lấy deck theo userId
@@ -74,12 +80,12 @@ class DecksManager with ChangeNotifier {
   }
 
   // Thêm deck mới
-  void addDeck(Deck deck) {
-    final newDeck = deck.copyWith(
-      id: 'd${DateTime.now().toIso8601String()}',
-    );
-    _decks.add(newDeck);
-    notifyListeners();
+  Future<void> addDeck(Deck deck) async {
+    final newDeck = await _decksService.addDeck(deck);
+    if (newDeck != null) {
+      _decks.add(newDeck);
+      notifyListeners();
+    }
   }
 
   // Cập nhật deck

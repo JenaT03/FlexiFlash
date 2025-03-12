@@ -9,7 +9,7 @@ class LaravelApiClient {
   bool _isInitialized = false;
 
   LaravelApiClient._();
-  
+
   Future<void> initialize() async {
     if (_isInitialized) return;
 
@@ -99,4 +99,14 @@ class LaravelApiClient {
   }
 
   bool get hasToken => _accessToken != null;
+
+  Future<String?> getUserId() async {
+    try {
+      final response = await _dio.get('/account');
+      return response.data['user']['id'].toString();
+    } catch (e) {
+      print('Lỗi khi lấy userId: $e');
+      return null;
+    }
+  }
 }

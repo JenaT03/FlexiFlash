@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../models/deck.dart';
+import 'deck_detail_screen.dart';
 
 class DeckGridItem extends StatelessWidget {
   const DeckGridItem(
@@ -72,6 +73,14 @@ class DeckGridItem extends StatelessWidget {
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
+            ),
+            child: GestureDetector(
+              onTap: () {
+                Navigator.of(context).pushNamed(
+                  DeckDetailScreen.routeName,
+                  arguments: deck.id,
+                );
+              },
             ),
           ),
         ],
