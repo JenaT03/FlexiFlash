@@ -11,7 +11,8 @@ enum FilterOptions { all, sinhhoc, vatly, hoahoc, lichsu, dialy }
 
 class DeckGrid extends StatelessWidget {
   final String text;
-  const DeckGrid(this.text, {super.key});
+  final bool isSearch;
+  const DeckGrid(this.text, {super.key, this.isSearch = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,6 +21,12 @@ class DeckGrid extends StatelessWidget {
       (deckManager) {
         if (text.isEmpty) {
           return deckManager.decks;
+        }
+        if (isSearch) {
+          return deckManager.decks
+              .where((deck) =>
+                  deck.title.toLowerCase().contains(text.toLowerCase()))
+              .toList();
         }
         if (text == 'yours') {
           return deckManager.decks

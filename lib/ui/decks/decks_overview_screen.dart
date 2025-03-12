@@ -19,6 +19,7 @@ class DecksOverviewScreen extends StatefulWidget {
 class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
   var _currentFilter = FilterOptions.all;
   late Future<void> _fetchDecks;
+  String _searchText = '';
 
   @override
   void initState() {
@@ -72,7 +73,11 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
                       borderRadius: BorderRadius.circular(20),
                     ),
                     fillColor: Theme.of(context).colorScheme.surface),
-                onChanged: (value) {},
+                onChanged: (value) {
+                  setState(() {
+                    _searchText = value;
+                  });
+                },
               ),
             ),
             const SizedBox(height: 50),
@@ -80,8 +85,14 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
                 future: _fetchDecks,
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.done) {
+                    if (_searchText.isNotEmpty) {
+                      return Expanded(
+                        child: DeckGrid(_searchText, isSearch: true),
+                      );
+                    }
                     return Expanded(
-                        child: DeckGrid(getFilter(_currentFilter)!));
+                      child: DeckGrid(getFilter(_currentFilter)!),
+                    );
                   }
                   return const Center(
                     child: CircularProgressIndicator(),
