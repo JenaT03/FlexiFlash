@@ -6,7 +6,8 @@ import '../screen.dart';
 
 class AddFlashCardScreen extends StatefulWidget {
   AddFlashCardScreen(Flashcard? flashcard, {super.key}) {
-    this.flashcard = Flashcard(text: '', imgURL: '', deckId: '');
+    this.flashcard =
+        Flashcard(text: '', description: '', language: '', deckId: '');
   }
   late final Flashcard flashcard;
   @override

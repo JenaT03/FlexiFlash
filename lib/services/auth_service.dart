@@ -104,7 +104,7 @@ class AuthService {
     try {
       // Gọi API để lấy thông tin user từ token
       final response = await client.dio.get('/account');
-      final user = User.fromJson(response.data);
+      final user = User.fromJson(response.data['user']);
 
       // Thông báo cho các listener về user mới
       _authStateController.add(user);

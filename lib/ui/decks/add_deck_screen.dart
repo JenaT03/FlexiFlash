@@ -163,11 +163,11 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.grey),
           ),
-          child: !_addedDeck.hasFeaturedImage()
+          child: !_addedDeck.hasImage()
               ? const Center(child: Text('Trống'))
               : FittedBox(
                   child: Image.file(
-                    _addedDeck.featuredImage!,
+                    _addedDeck.imageBgFile!,
                     fit: BoxFit.cover,
                   ),
                 ),
@@ -195,7 +195,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
             return;
           }
           _addedDeck = _addedDeck.copyWith(
-            featuredImage: File(imageFile.path),
+            imageBgFile: File(imageFile.path),
             imageBg: imageFile.path,
           );
           setState(() {});
@@ -215,7 +215,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
       return;
     }
     _addForm.currentState!.save();
-    final File? ex = _addedDeck.featuredImage;
+    final File? ex = _addedDeck.imageBgFile;
     print('_addedDeck $ex');
 
     try {

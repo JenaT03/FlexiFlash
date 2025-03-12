@@ -3,7 +3,7 @@ import 'dart:io';
 class Flashcard {
   final String? id;
   final String text;
-  final String? imgURL;
+  final String imgURL;
   final String description;
   final String language;
   final bool isMarked;
@@ -13,7 +13,7 @@ class Flashcard {
   Flashcard({
     this.id,
     required this.text,
-    this.imgURL,
+    this.imgURL = '',
     required this.description,
     required this.language,
     this.isMarked = false,

@@ -7,7 +7,6 @@ import 'add_deck_screen.dart';
 
 class UserDecksScreen extends StatelessWidget {
   static const routeName = '/user_decks';
-
   const UserDecksScreen({super.key});
 
   @override
@@ -57,7 +56,7 @@ class UserDecksScreen extends StatelessWidget {
 
           // Scrollable grid of cards
           Expanded(
-            child: DeckGrid(),
+            child: DeckGrid('yours'),
           ),
         ],
       ),

@@ -8,14 +8,14 @@ class Deck {
   bool isFavorite;
   bool isSuperUser;
   final String? userId;
-  final File? featuredImage;
+  final File? imageBgFile;
 
   Deck({
     this.id,
     required this.title,
     required this.type,
     this.imageBg = '',
-    this.featuredImage,
+    this.imageBgFile,
     this.isFavorite = false,
     this.isSuperUser = false,
     this.userId,
@@ -26,7 +26,7 @@ class Deck {
     String? title,
     String? type,
     String? imageBg,
-    File? featuredImage,
+    File? imageBgFile,
     bool? isFavorite,
     String? userId,
   }) {
@@ -35,15 +35,15 @@ class Deck {
       title: title ?? this.title,
       type: type ?? this.type,
       imageBg: imageBg ?? this.imageBg,
-      featuredImage: featuredImage ?? this.featuredImage,
+      imageBgFile: imageBgFile ?? this.imageBgFile,
       isFavorite: isFavorite ?? this.isFavorite,
       isSuperUser: isSuperUser ?? this.isSuperUser,
       userId: userId ?? this.userId,
     );
   }
 
-  bool hasFeaturedImage() {
-    return featuredImage != null || imageBg.isNotEmpty;
+  bool hasImage() {
+    return imageBgFile != null || imageBg.isNotEmpty;
   }
 
   Map<String, dynamic> toJson() {
@@ -57,12 +57,13 @@ class Deck {
 
   factory Deck.fromJson(Map<String, dynamic> json) {
     return Deck(
-      id: json['deck']['id'],
-      title: json['deck']['title'],
-      type: json['deck']['type'],
-      imageBg: json['deck']['imageBg'],
-      isFavorite: json['deck']['isFavorite'] == 1 ? true : false,
-      isSuperUser: json['deck']['isSuperUser'] == 1 ? true : false,
+      id: json['id'],
+      title: json['title'],
+      type: json['type'],
+      imageBg: json['imageBg'],
+      isFavorite: json['isFavorite'] == 1 ? true : false,
+      isSuperUser: json['isSuperUser'] == 1 ? true : false,
+      userId: json['userId'],
     );
   }
 }
