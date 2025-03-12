@@ -1,18 +1,24 @@
+import 'dart:io';
+
 class Flashcard {
   final String? id;
   final String text;
-  final String imgURL;
+  final String? imgURL;
   final String description;
-  final bool isFavorite;
+  final String language;
+  final bool isMarked;
   final String deckId;
+  final File? imageFile;
 
   Flashcard({
     this.id,
     required this.text,
-    required this.imgURL,
-    this.description = '',
-    this.isFavorite = false,
+    this.imgURL,
+    required this.description,
+    required this.language,
+    this.isMarked = false,
     required this.deckId,
+    this.imageFile,
   });
 
   Flashcard copyWith({
@@ -20,7 +26,8 @@ class Flashcard {
     String? text,
     String? imgURL,
     String? description,
-    bool? isFavorite,
+    String? language,
+    bool? isMarked,
     String? deckId,
   }) {
     return Flashcard(
@@ -28,8 +35,31 @@ class Flashcard {
       text: text ?? this.text,
       imgURL: imgURL ?? this.imgURL,
       description: description ?? this.description,
-      isFavorite: isFavorite ?? this.isFavorite,
+      language: language ?? this.language,
+      isMarked: isMarked ?? this.isMarked,
       deckId: deckId ?? this.deckId,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'text': text,
+      'description': description,
+      'language': language,
+      'isMarked': isMarked,
+      'deckId': deckId,
+    };
+  }
+
+  factory Flashcard.fromJson(Map<String, dynamic> json) {
+    return Flashcard(
+      id: json['id'],
+      text: json['text'],
+      imgURL: json['imgURL'],
+      description: json['description'],
+      language: json['language'],
+      isMarked: json['isMarked'] ?? false,
+      deckId: json['deckId'],
     );
   }
 }
