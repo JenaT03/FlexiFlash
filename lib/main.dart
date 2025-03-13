@@ -29,6 +29,9 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(
           create: (ctx) => DecksManager(),
         ),
+        ChangeNotifierProvider(
+          create: (ctx) => FlashcardManager(),
+        ),
       ],
       child: Consumer<AuthManager>(
         builder: (ctx, authManager, child) {
@@ -73,11 +76,37 @@ class MyApp extends StatelessWidget {
                     });
               }
               if (settings.name == AddDeckScreen.routeName) {
+                final deckId = settings.arguments as String?;
                 return MaterialPageRoute(
                     settings: settings,
                     builder: (ctx) {
                       return SafeArea(
-                        child: AddDeckScreen(),
+                        child: AddDeckScreen(
+                          deckId != null
+                              ? ctx.read<DecksManager>().findById(deckId)
+                              : null,
+                        ),
+                      );
+                    });
+              }
+
+              if (settings.name == AddFlashCardScreen.routeName) {
+                final arguments = settings.arguments as Map<String, dynamic>?;
+
+                final String? flashcardId = arguments!['flashcardId'];
+                final String deckId = arguments['deckId'];
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (ctx) {
+                      return SafeArea(
+                        child: AddFlashCardScreen(
+                          deckId: deckId,
+                          flashcardId != null
+                              ? ctx
+                                  .read<FlashcardManager>()
+                                  .findById(flashcardId)
+                              : null,
+                        ),
                       );
                     });
               }

@@ -28,7 +28,9 @@ class DecksManager with ChangeNotifier {
 
   Deck? findById(String id) {
     try {
-      return _decks.firstWhere((deck) => deck.id == id);
+      final deck = _decks.firstWhere((deck) => deck.id == id);
+      print('deckmig ${deck.imageBg}');
+      return deck;
     } catch (error) {
       return null;
     }
@@ -40,11 +42,12 @@ class DecksManager with ChangeNotifier {
   }
 
   // Thêm deck mới
-  Future<void> addDeck(Deck deck) async {
+  Future<String?> addDeck(Deck deck) async {
     final newDeck = await _decksService.addDeck(deck);
     if (newDeck != null) {
       _decks.add(newDeck);
       notifyListeners();
+      return newDeck.id;
     }
   }
 
@@ -71,6 +74,20 @@ class DecksManager with ChangeNotifier {
   Future<void> fetchDecks() async {
     _decks = await _decksService.fetchDecks();
     notifyListeners();
+  }
+
+  Future<void> fetchDeckById(String id) async {
+    Deck? deck = await _decksService.fetchDeckById(id);
+    if (deck != null) {
+      String? deckId = deck.id;
+      final index = _decks.indexWhere((deck) => deck.id != deckId);
+
+      if (index <= 0) {
+        _decks.add(deck);
+        for (_decks in deck) {}
+        notifyListeners();
+      }
+    }
   }
 
   Future<void> fetchUserDecks() async {

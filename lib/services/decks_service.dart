@@ -32,14 +32,16 @@ class DecksService {
   }
 
   Future<Deck?> fetchDeckById(String id) async {
+    final String storageUrl =
+        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       final client = await LaravelApiClient.getInstance();
-
       final response = await client.dio.get('/decks/$id');
-
       if (response.statusCode == 200) {
         final data = response.data['deck'];
-        return Deck.fromJson(data);
+        Deck deck = Deck.fromJson(data);
+        deck = deck.copyWith(imageBg: "$storageUrl${deck.imageBg}");
+        return deck;
       }
 
       return null;
@@ -50,16 +52,16 @@ class DecksService {
   }
 
   Future<Deck?> addDeck(Deck deck) async {
-    final client = await LaravelApiClient.getInstance();
-    final userId = await client.getUserId();
     try {
+      final client = await LaravelApiClient.getInstance();
+      final userId = await client.getUserId();
       final response = await client.dio.post(
         '/decks',
         data: FormData.fromMap({
           ...deck.toJson(),
           'userId': userId,
           if (deck.imageBgFile != null)
-            'imageBg': await MultipartFile.fromFile(
+            'imageBgFile': await MultipartFile.fromFile(
               deck.imageBgFile!.path,
               filename: deck.imageBgFile!.uri.pathSegments.last,
             ),

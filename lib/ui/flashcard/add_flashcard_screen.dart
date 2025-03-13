@@ -1,13 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../flashcard/flashcards_manager.dart';
 import '../../models/flashcard.dart';
 import '../screen.dart';
 
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
+
 class AddFlashCardScreen extends StatefulWidget {
-  AddFlashCardScreen(Flashcard? flashcard, {super.key}) {
-    this.flashcard =
-        Flashcard(text: '', description: '', language: '', deckId: '');
+  static const routeName = '/add_flashcard';
+  final String deckId;
+  AddFlashCardScreen(Flashcard? flashcard, {super.key, required this.deckId}) {
+    if (flashcard == null) {
+      this.flashcard =
+          Flashcard(text: '', description: '', language: '', deckId: '');
+    } else {
+      this.flashcard = flashcard;
+    }
   }
   late final Flashcard flashcard;
   @override
@@ -19,6 +27,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _addForm = GlobalKey<FormState>();
   late Flashcard _addedflashcard;
+  late String _deckId;
 
   bool _isValidImageUrl(String value) {
     return (value.startsWith('http') || value.startsWith('https')) &&
@@ -39,6 +48,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     });
     _addedflashcard = widget.flashcard;
     _imageUrlController.text = _addedflashcard.imgURL;
+    _deckId = widget.deckId;
     super.initState();
   }
 
@@ -53,6 +63,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -63,41 +74,44 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 40, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 20, left: 10, right: 10),
         child: Column(
           children: [
             Text(
-              'Tên bộ thẻ'.toUpperCase(),
+              getTitle().toUpperCase(),
               style: TextStyle(
-                fontSize: 24,
+                fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
               textAlign: TextAlign.center,
             ),
-            const SizedBox(height: 40),
+            const SizedBox(height: 30),
             Expanded(
               child: Form(
+                key: _addForm,
                 child: ListView(
                   children: <Widget>[
+                    _buildSelectLangue(),
+                    const SizedBox(height: 20),
                     _buildTitleflashcard(),
-                    const SizedBox(height: 10),
-                    _buildImageURLField(),
+                    const SizedBox(height: 20),
+                    _buildFlashCardPreview(),
+                    const SizedBox(height: 20),
                     _buildDescriptionField()
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 ShortButton(
                   text: "Hoàn thành",
-                  onPressed: () => {},
+                  onPressed: () => _saveForm('finish'),
                 ),
                 ShortButton(
                   text: "Tiếp tục",
-                  onPressed: _saveForm,
+                  onPressed: () => _saveForm('next'),
                 ),
               ],
             )
@@ -105,6 +119,14 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
         ),
       ),
     );
+  }
+
+  String getTitle() {
+    String title = '';
+    final deckManager = context.read<DecksManager>();
+    final deck = deckManager.findById(_deckId);
+    title = deck!.title;
+    return title;
   }
 
   TextFormField _buildTitleflashcard() {
@@ -129,29 +151,90 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     );
   }
 
-  TextFormField _buildImageURLField() {
-    return TextFormField(
-      decoration: const InputDecoration(
-        labelText: 'Đường dẫn ảnh minh họa',
+  Widget _buildSelectLangue() {
+    String selectedLanguage = "vi-VN";
+    return DropdownButtonFormField<String>(
+      value: selectedLanguage,
+      decoration: InputDecoration(
+        labelText: "Chọn ngôn ngữ",
         filled: false,
-        border: UnderlineInputBorder(),
+        border: OutlineInputBorder(),
       ),
-      keyboardType: TextInputType.url,
-      textInputAction: TextInputAction.done,
-      controller: _imageUrlController,
-      focusNode: _imageUrlFocusNode,
-      onFieldSubmitted: (value) => _saveForm(),
-      validator: (value) {
-        if (value!.isEmpty) {
-          return 'Không được để trống';
-        }
-        if (!_isValidImageUrl(value)) {
-          return 'Hãy nhập đường dẫn chính xác';
-        }
-        return null;
+      items: const [
+        DropdownMenuItem(value: "vi-VN", child: Text("Tiếng Việt")),
+        DropdownMenuItem(value: "en-GB", child: Text("Tiếng Anh")),
+        DropdownMenuItem(value: "fr-FR", child: Text("Tiếng Pháp")),
+        DropdownMenuItem(value: "de-DE", child: Text("Tiếng Đức")),
+        DropdownMenuItem(value: "es-ES", child: Text("Tiếng Tây Ban Nha")),
+        DropdownMenuItem(value: "ja-JP", child: Text("Tiếng Nhật")),
+        DropdownMenuItem(value: "ko_KR", child: Text("Tiếng Hàn")),
+        DropdownMenuItem(value: "zh-CN", child: Text("Tiếng Trung")),
+        DropdownMenuItem(value: "ru_RU", child: Text("Tiếng Nga")),
+      ],
+      validator: (value) => value == null ? 'Vui lòng chọn một giá trị' : null,
+      onChanged: (value) {
+        setState(() {
+          selectedLanguage = value!;
+        });
       },
       onSaved: (value) {
-        _addedflashcard = _addedflashcard.copyWith(imgURL: value);
+        _addedflashcard = _addedflashcard.copyWith(language: value);
+      },
+    );
+  }
+
+  Widget _buildFlashCardPreview() {
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        Container(
+          width: 100,
+          height: 100,
+          margin: const EdgeInsets.only(top: 8, right: 10),
+          decoration: BoxDecoration(
+            border: Border.all(width: 1, color: Colors.grey),
+          ),
+          child: !_addedflashcard.hasImage()
+              ? const Center(child: Text('Trống'))
+              : FittedBox(
+                  child: Image.file(
+                    _addedflashcard.imageFile!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+        ),
+        Expanded(
+          child: SizedBox(
+            height: 100,
+            child: _buildImagePickerButton(),
+          ),
+        ),
+      ],
+    );
+  }
+
+  TextButton _buildImagePickerButton() {
+    return TextButton.icon(
+      icon: const Icon(Icons.image),
+      label: const Text('Chọn hình ảnh'),
+      onPressed: () async {
+        final imagePicker = ImagePicker();
+        try {
+          final imageFile =
+              await imagePicker.pickImage(source: ImageSource.gallery);
+          if (imageFile == null) {
+            return;
+          }
+          _addedflashcard = _addedflashcard.copyWith(
+            imageFile: File(imageFile.path),
+            imgURL: imageFile.path,
+          );
+          setState(() {});
+        } catch (error) {
+          if (mounted) {
+            showErrorDialog(context, 'Something went wrong');
+          }
+        }
       },
     );
   }
@@ -172,7 +255,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     );
   }
 
-  Future<void> _saveForm() async {
+  Future<void> _saveForm(String text) async {
     final isValid = _addForm.currentState!.validate();
     if (!isValid) {
       return;
@@ -182,13 +265,19 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     try {
       final flashcardManager = context.read<FlashcardManager>();
 
-      flashcardManager.addFlashcard(_addedflashcard);
+      await flashcardManager.addFlashcard(_deckId, _addedflashcard);
+
+      if (mounted) {
+        if (text == 'next') {
+          Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
+              arguments: {'deckId': _deckId});
+        } else {
+          int count = await flashcardManager.countFlashcardsInDeck(_deckId);
+          await showFinishDialog(context, count);
+        }
+      }
     } catch (error) {
       await showErrorDialog(context, 'Có lỗi xảy ra');
-    }
-
-    if (mounted) {
-      Navigator.of(context).pop();
     }
   }
 
@@ -206,5 +295,63 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                     },
                   )
                 ]));
+  }
+
+  Future<void> showFinishDialog(BuildContext context, int count) {
+    final primaryColor = Theme.of(context).colorScheme.primary;
+    final secondaryColor = Theme.of(context).colorScheme.secondary;
+    final onSecondaryColor = Theme.of(context).colorScheme.onSecondary;
+
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Đã xong 🎉',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              '$count thẻ đã được tạo thành công',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(height: 30),
+          ],
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              TextButton(
+                onPressed: () => Navigator.of(ctx).pushNamed(
+                  DeckDetailScreen.routeName,
+                  arguments: _deckId,
+                ),
+                child: Text("Xem bộ thẻ vừa tạo",
+                    style: TextStyle(color: primaryColor)),
+              ),
+              ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: secondaryColor),
+                onPressed: () {
+                  Navigator.of(ctx).pushNamed(UserDecksScreen.routeName);
+                },
+                child:
+                    Text("Trở về", style: TextStyle(color: onSecondaryColor)),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
   }
 }

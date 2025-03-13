@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../decks/decks_manager.dart';
 import '../../models/deck.dart';
 import '../screen.dart';
 
@@ -9,8 +8,15 @@ import 'dart:io';
 
 class AddDeckScreen extends StatefulWidget {
   static const routeName = '/add_deck';
-  AddDeckScreen({super.key});
-  final Deck deck = Deck(title: '', type: '');
+  AddDeckScreen(Deck? deck, {super.key}) {
+    if (deck == null) {
+      this.deck = Deck(title: '', type: '');
+    } else {
+      this.deck = deck;
+    }
+  }
+
+  late final Deck deck;
   @override
   State<AddDeckScreen> createState() => _AddDeckScreenState();
 }
@@ -54,6 +60,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -85,21 +92,20 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                     const SizedBox(height: 20),
                     _buildSelectType(),
                     const SizedBox(height: 20),
-                    _buildProductPreview(),
+                    _buildDeckPreview(),
                   ],
                 ),
               ),
             ),
-            const SizedBox(height: 20),
             Row(
-              mainAxisAlignment: MainAxisAlignment.end,
               children: [
+                Spacer(),
                 ShortButton(
                   text: "Tiếp tục",
                   onPressed: _saveForm,
                 ),
               ],
-            )
+            ),
           ],
         ),
       ),
@@ -108,7 +114,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
 
   TextFormField _buildTitleDeck() {
     return TextFormField(
-      initialValue: '',
+      initialValue: _addedDeck.title,
       decoration: const InputDecoration(
         labelText: 'Tên bộ thẻ',
         filled: false,
@@ -135,6 +141,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         filled: false,
         border: OutlineInputBorder(),
       ),
+      value: _addedDeck.type.isNotEmpty ? _addedDeck.type : null,
       items: const [
         DropdownMenuItem(value: "Sinh học", child: Text("Sinh học")),
         DropdownMenuItem(value: "Vật lý", child: Text("Vật lý")),
@@ -152,7 +159,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
     );
   }
 
-  Widget _buildProductPreview() {
+  Widget _buildDeckPreview() {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: <Widget>[
@@ -215,18 +222,18 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
       return;
     }
     _addForm.currentState!.save();
-    final File? ex = _addedDeck.imageBgFile;
-    print('_addedDeck $ex');
 
     try {
       final deckManager = context.read<DecksManager>();
-      deckManager.addDeck(_addedDeck);
+      String? deckId = await deckManager.addDeck(_addedDeck);
+      await deckManager.fetchDeckById(deckId!);
+      if (mounted) {
+        Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
+            arguments: {'deckId': deckId});
+      }
     } catch (error) {
+      print("Lỗi xảy ra: $error");
       await showErrorDialog(context, 'Có lỗi xảy ra');
-    }
-
-    if (mounted) {
-      Navigator.of(context).pop();
     }
   }
 

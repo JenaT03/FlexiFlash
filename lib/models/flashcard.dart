@@ -25,6 +25,7 @@ class Flashcard {
     String? id,
     String? text,
     String? imgURL,
+    File? imageFile,
     String? description,
     String? language,
     bool? isMarked,
@@ -34,6 +35,7 @@ class Flashcard {
       id: id ?? this.id,
       text: text ?? this.text,
       imgURL: imgURL ?? this.imgURL,
+      imageFile: imageFile ?? this.imageFile,
       description: description ?? this.description,
       language: language ?? this.language,
       isMarked: isMarked ?? this.isMarked,
@@ -41,12 +43,16 @@ class Flashcard {
     );
   }
 
+  bool hasImage() {
+    return imageFile != null || imgURL.isNotEmpty;
+  }
+
   Map<String, dynamic> toJson() {
     return {
       'text': text,
       'description': description,
       'language': language,
-      'isMarked': isMarked,
+      'isMarked': isMarked ? 1 : 0,
       'deckId': deckId,
     };
   }
@@ -55,10 +61,10 @@ class Flashcard {
     return Flashcard(
       id: json['id'],
       text: json['text'],
-      imgURL: json['imgURL'],
+      imgURL: json['imgUrl'],
       description: json['description'],
       language: json['language'],
-      isMarked: json['isMarked'] ?? false,
+      isMarked: json['isMarked'] == 1 ? true : false,
       deckId: json['deckId'],
     );
   }

@@ -16,6 +16,8 @@ export 'flashcard/flashcard_screen.dart';
 export 'flashcard/flashcard_detail.dart';
 export 'flashcard/quiz.dart';
 export 'flashcard/finish_quiz.dart';
+export 'flashcard/add_flashcard_screen.dart';
+export 'flashcard/flashcards_manager.dart';
 
 export 'flashcard/flashcard_grid.dart';
 

@@ -4,22 +4,21 @@ import '../models/flashcard.dart';
 import './laravel_api_client.dart';
 
 class FlashcardsService {
-  FlashcardsService._() {
-    // Constructor riêng để đảm bảo không thể tạo trực tiếp instance
-  }
-
   Future<List<Flashcard>> fetchFlashcards({required String deckId}) async {
     final List<Flashcard> flashcards = [];
-
+    final String storageUrl =
+        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       final client = await LaravelApiClient.getInstance();
 
       final response = await client.dio.get('/decks/$deckId/flashcards');
-
       if (response.statusCode == 200) {
         final data = response.data['flashcards'] as List;
         for (final flashcardData in data) {
-          flashcards.add(Flashcard.fromJson(flashcardData));
+          Flashcard flashcard = Flashcard.fromJson(flashcardData);
+          flashcard =
+              flashcard.copyWith(imgURL: "$storageUrl${flashcard.imgURL}");
+          flashcards.add(flashcard);
         }
       }
 
@@ -57,28 +56,16 @@ class FlashcardsService {
     try {
       final client = await LaravelApiClient.getInstance();
 
-      // Chuẩn bị dữ liệu cho request
-      final formData = FormData.fromMap({
-        ...flashcard.toJson(),
-      });
-
-      // Thêm file ảnh nếu có
-      if (flashcard.imageFile != null) {
-        formData.files.add(
-          MapEntry(
-            'imageFile',
-            await MultipartFile.fromFile(
-              flashcard.imageFile!.path,
-              filename: flashcard.imageFile!.path.split('/').last,
-            ),
-          ),
-        );
-      }
-
-      // Gọi API để tạo deck mới
       final response = await client.dio.post(
         '/decks/$deckId/flashcards',
-        data: formData,
+        data: FormData.fromMap({
+          ...flashcard.toJson(),
+          if (flashcard.imageFile != null)
+            'imageFile': await MultipartFile.fromFile(
+              flashcard.imageFile!.path,
+              filename: flashcard.imageFile!.uri.pathSegments.last,
+            ),
+        }),
         options: Options(
           headers: {
             'Content-Type': 'multipart/form-data',
@@ -86,15 +73,9 @@ class FlashcardsService {
         ),
       );
 
-      if (response.statusCode == 200 || response.statusCode == 201) {
-        // Parse dữ liệu từ response
-        final data = response.data['flashcard'];
-        return Flashcard.fromJson(data);
-      }
-
-      return null;
+      return Flashcard.fromJson(response.data['flashcard']);
     } catch (error) {
-      print('Error adding flashcard: $error');
+      print('Lỗi adding flashcard: $error');
       return null;
     }
   }
