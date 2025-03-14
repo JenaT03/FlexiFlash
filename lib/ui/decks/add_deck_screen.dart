@@ -97,15 +97,29 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                 ),
               ),
             ),
-            Row(
-              children: [
-                Spacer(),
-                ShortButton(
-                  text: "Tiếp tục",
-                  onPressed: _saveForm,
-                ),
-              ],
-            ),
+            _addedDeck.id == null
+                ? Row(
+                    children: [
+                      Spacer(),
+                      ShortButton(
+                        text: "Tiếp tục",
+                        onPressed: _saveForm,
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ShortButton(
+                        text: 'Chỉnh sửa thẻ',
+                        onPressed: () => Navigator.of(context).pop(),
+                      ),
+                      ShortButton(
+                        text: "Lưu",
+                        onPressed: _saveForm,
+                      ),
+                    ],
+                  )
           ],
         ),
       ),
@@ -173,10 +187,12 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
           child: !_addedDeck.hasImage()
               ? const Center(child: Text('Trống'))
               : FittedBox(
-                  child: Image.file(
-                    _addedDeck.imageBgFile!,
-                    fit: BoxFit.cover,
-                  ),
+                  child: _addedDeck.imageBgFile != null
+                      ? Image.file(
+                          _addedDeck.imageBgFile!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(_addedDeck.imageBg, fit: BoxFit.cover),
                 ),
         ),
         Expanded(
@@ -226,7 +242,6 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
     try {
       final deckManager = context.read<DecksManager>();
       String? deckId = await deckManager.addDeck(_addedDeck);
-      await deckManager.fetchDeckById(deckId!);
       if (mounted) {
         Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
             arguments: {'deckId': deckId});

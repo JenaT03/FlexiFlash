@@ -131,7 +131,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
 
   TextFormField _buildTitleflashcard() {
     return TextFormField(
-      initialValue: '',
+      initialValue: _addedflashcard.text,
       decoration: const InputDecoration(
         labelText: 'Tên thẻ',
         filled: false,
@@ -152,7 +152,10 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   }
 
   Widget _buildSelectLangue() {
-    String selectedLanguage = "vi-VN";
+    String selectedLanguage = 'vi-VN';
+    _addedflashcard.language.isNotEmpty
+        ? selectedLanguage = _addedflashcard.language
+        : 'vi-VN';
     return DropdownButtonFormField<String>(
       value: selectedLanguage,
       decoration: InputDecoration(
@@ -197,10 +200,15 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
           child: !_addedflashcard.hasImage()
               ? const Center(child: Text('Trống'))
               : FittedBox(
-                  child: Image.file(
-                    _addedflashcard.imageFile!,
-                    fit: BoxFit.cover,
-                  ),
+                  child: _addedflashcard.imageFile != null
+                      ? Image.file(
+                          _addedflashcard.imageFile!,
+                          fit: BoxFit.cover,
+                        )
+                      : Image.network(
+                          _addedflashcard.imgURL,
+                          fit: BoxFit.cover,
+                        ),
                 ),
         ),
         Expanded(
@@ -241,7 +249,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
 
   TextFormField _buildDescriptionField() {
     return TextFormField(
-      initialValue: '',
+      initialValue: _addedflashcard.description,
       decoration: const InputDecoration(
         labelText: 'Mô tả',
         filled: false,
@@ -299,15 +307,13 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
 
   Future<void> showFinishDialog(BuildContext context, int count) {
     final primaryColor = Theme.of(context).colorScheme.primary;
-    final secondaryColor = Theme.of(context).colorScheme.secondary;
-    final onSecondaryColor = Theme.of(context).colorScheme.onSecondary;
 
     return showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         title: Text(
-          'Đã xong 🎉',
+          'Hoàn thành 🎉',
           textAlign: TextAlign.center,
           style: TextStyle(
               fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
@@ -324,32 +330,31 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                 fontWeight: FontWeight.w500,
               ),
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
+            Text(
+              'Bạn muốn tạo bộ thẻ mới hay quay lại trang chính?',
+              textAlign: TextAlign.center,
+              style: TextStyle(fontSize: 14, color: Colors.black54),
+            ),
           ],
         ),
         actions: <Widget>[
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pushNamed(
-                  DeckDetailScreen.routeName,
-                  arguments: _deckId,
-                ),
-                child: Text("Xem bộ thẻ vừa tạo",
-                    style: TextStyle(color: primaryColor)),
+              CustTextButton(
+                text: "Tạo bộ thẻ mới",
+                onPressed: () =>
+                    Navigator.of(context).pushNamed(AddDeckScreen.routeName),
               ),
-              ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: secondaryColor),
+              CustFilledButton(
+                text: "Trở về",
                 onPressed: () {
                   Navigator.of(ctx).pushNamed(UserDecksScreen.routeName);
                 },
-                child:
-                    Text("Trở về", style: TextStyle(color: onSecondaryColor)),
               ),
             ],
-          )
+          ),
         ],
       ),
     );

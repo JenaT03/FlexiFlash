@@ -25,7 +25,6 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
   void initState() {
     super.initState();
     _fetchDecks = context.read<DecksManager>().fetchDecks();
-    print('decks manager $_fetchDecks');
   }
 
   @override

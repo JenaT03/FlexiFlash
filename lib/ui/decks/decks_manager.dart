@@ -52,20 +52,23 @@ class DecksManager with ChangeNotifier {
   }
 
   // Cập nhật deck
-  void updateDeck(Deck deck) {
+  Future<void> updateDeck(Deck deck) async {
     final index = _decks.indexWhere((item) => item.id == deck.id);
 
     if (index >= 0) {
-      _decks[index] = deck;
-      notifyListeners();
+      final updatedDeck = await _decksService.updateDeck(deck);
+      if (updatedDeck != null) {
+        _decks[index] = updatedDeck;
+        notifyListeners();
+      }
     }
   }
 
   // Xóa deck
-  void deleteDeck(String id) {
+  Future<void> deleteDeck(String id) async {
     final index = _decks.indexWhere((deck) => deck.id == id);
 
-    if (index >= 0) {
+    if (index >= 0 && !await _decksService.deleteDeck(id)) {
       _decks.removeAt(index);
       notifyListeners();
     }
@@ -81,10 +84,9 @@ class DecksManager with ChangeNotifier {
     if (deck != null) {
       String? deckId = deck.id;
       final index = _decks.indexWhere((deck) => deck.id != deckId);
-
       if (index <= 0) {
         _decks.add(deck);
-        for (_decks in deck) {}
+
         notifyListeners();
       }
     }

@@ -1,13 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../shared/bot_nav_bar.dart';
-import '../shared/long_button.dart';
 import 'deck_grid.dart';
-import 'add_deck_screen.dart';
 
-class UserDecksScreen extends StatelessWidget {
+import '../screen.dart';
+
+class UserDecksScreen extends StatefulWidget {
   static const routeName = '/user_decks';
   const UserDecksScreen({super.key});
+
+  @override
+  State<UserDecksScreen> createState() => _UserDecksScreenState();
+}
+
+class _UserDecksScreenState extends State<UserDecksScreen> {
+  late Future<void> _fetchDecks;
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchDecks = context.read<DecksManager>().fetchDecks();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,10 +67,19 @@ class UserDecksScreen extends StatelessWidget {
             ),
           ),
 
+          FutureBuilder(
+              future: _fetchDecks,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  return Expanded(
+                    child: DeckGrid('yours'),
+                  );
+                }
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              })
           // Scrollable grid of cards
-          Expanded(
-            child: DeckGrid('yours'),
-          ),
         ],
       ),
       bottomNavigationBar:

@@ -58,18 +58,25 @@ class FlashcardManager with ChangeNotifier {
   }
 
   // Cập nhật flashcard
-  void updateFlashcard(Flashcard flashcard) {
+  Future<void> updateFlashcard(Flashcard flashcard, String deckId) async {
     final index = _flashcards.indexWhere((item) => item.id == flashcard.id);
     if (index >= 0) {
-      _flashcards[index] = flashcard;
-      notifyListeners();
+      final updatedFlashcard = await _flashcardsService.updateFlashcard(
+          deckId: deckId, flashcard: flashcard);
+      if (updatedFlashcard != null) {
+        _flashcards[index] = updatedFlashcard;
+        notifyListeners();
+      }
     }
   }
 
   // Xóa flashcard
-  void deleteFlashcard(String id) {
-    final index = _flashcards.indexWhere((flashcard) => flashcard.id == id);
-    if (index >= 0) {
+  Future<void> deleteFlashcard(String flashId, String deckId) async {
+    final index =
+        _flashcards.indexWhere((flashcard) => flashcard.id == flashId);
+    if (index >= 0 &&
+        !await _flashcardsService.deleteFlashcard(
+            deckId: deckId, flashcardId: flashId)) {
       _flashcards.removeAt(index);
       notifyListeners();
     }

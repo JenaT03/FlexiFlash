@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/deck.dart';
 import '../screen.dart';
 
-class DeckDetailScreen extends StatelessWidget {
+class DeckDetailScreen extends StatefulWidget {
   static const routeName = '/deck_detail';
 
   const DeckDetailScreen(this.deck, {super.key});
 
   final Deck deck;
 
+  @override
+  State<DeckDetailScreen> createState() => _DeckDetailScreenState();
+}
+
+class _DeckDetailScreenState extends State<DeckDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -36,7 +42,7 @@ class DeckDetailScreen extends StatelessWidget {
                 height: 210,
                 decoration: ShapeDecoration(
                   image: DecorationImage(
-                    image: NetworkImage(deck.imageBg),
+                    image: NetworkImage(widget.deck.imageBg),
                     fit: BoxFit.cover,
                   ),
                   shape: RoundedRectangleBorder(
@@ -49,7 +55,7 @@ class DeckDetailScreen extends StatelessWidget {
                 right: 0,
                 child: IconButton(
                   onPressed: () => {},
-                  icon: FavorIcon(deck),
+                  icon: FavorIcon(widget.deck),
                 ),
               ),
             ],
@@ -58,7 +64,7 @@ class DeckDetailScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24.0),
             child: Text(
-              deck.title,
+              widget.deck.title,
               textAlign: TextAlign.center,
               style: TextStyle(
                 color: Theme.of(context).colorScheme.onBackground,
@@ -102,7 +108,7 @@ class DeckDetailScreen extends StatelessWidget {
               ),
               WarningButton(
                 text: "Xóa bộ thẻ",
-                onPressed: () => {},
+                onPressed: () => _deleteDeck(widget.deck),
               )
             ],
           )
@@ -111,6 +117,67 @@ class DeckDetailScreen extends StatelessWidget {
       bottomNavigationBar:
           // Bottom Navigation Bar
           const BotNavBar(initialIndex: 0),
+    );
+  }
+
+  Future<void> _deleteDeck(Deck? deck) async {
+    if (deck == null) return;
+
+    try {
+      final deckManager = context.read<DecksManager>();
+      await deckManager.deleteDeck(deck.id!);
+      if (mounted) {
+        await showConfirmDialog(context, deck.title);
+      }
+    } catch (error) {
+      await showErrorDialog(context, 'Có lỗi xảy ra');
+    }
+  }
+
+  Future<void> showConfirmDialog(BuildContext context, String name) {
+    final ErrorColor = Theme.of(context).colorScheme.error;
+
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: Text(
+          'Xác nhận xóa',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              fontSize: 24, fontWeight: FontWeight.bold, color: ErrorColor),
+        ),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            const SizedBox(height: 10),
+            Text(
+              'Bạn chắc có muốn xóa bộ thẻ $name không? 🤔',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: 16,
+              ),
+            ),
+          ],
+        ),
+        actions: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              CustTextButton(
+                text: "Hủy",
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              CustFilledButton(
+                text: "Xóa",
+                onPressed: () {
+                  Navigator.of(ctx).pushNamed(DecksOverviewScreen.routeName);
+                },
+              ),
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
