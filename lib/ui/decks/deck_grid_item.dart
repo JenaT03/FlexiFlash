@@ -1,4 +1,6 @@
+import 'package:ct484_project/ui/screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/deck.dart';
 import 'deck_detail_screen.dart';
@@ -54,9 +56,15 @@ class DeckGridItem extends StatelessWidget {
                 ),
               ),
               IconButton(
-                onPressed: () => {},
+                onPressed: () => {
+                  context.read<DecksManager>().updateDeck(
+                        deck.copyWith(
+                          isFavorite: !deck.isFavorite,
+                        ),
+                      ),
+                },
                 icon: Icon(
-                  Icons.favorite_border,
+                  deck.isFavorite ? Icons.favorite : Icons.favorite_border,
                   color: Theme.of(context).colorScheme.secondary,
                 ),
               ),

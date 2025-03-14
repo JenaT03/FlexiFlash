@@ -113,7 +113,7 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               ),
               WarningButton(
                 text: "Xóa bộ thẻ",
-                onPressed: () => _deleteDeck(widget.deck),
+                onPressed: () => showConfirmDialog(context, widget.deck),
               )
             ],
           )
@@ -131,16 +131,16 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
     try {
       final deckManager = context.read<DecksManager>();
       await deckManager.deleteDeck(deck.id!);
-      if (mounted) {
-        await showConfirmDialog(context, deck.title);
-      }
+      return;
     } catch (error) {
       await showErrorDialog(context, 'Có lỗi xảy ra');
     }
   }
 
-  Future<void> showConfirmDialog(BuildContext context, String name) {
-    final ErrorColor = Theme.of(context).colorScheme.error;
+  Future<void> showConfirmDialog(BuildContext context, Deck? deck) async {
+    if (deck == null) return;
+
+    final errorColor = Theme.of(context).colorScheme.error;
 
     return showDialog(
       context: context,
@@ -150,18 +150,19 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           'Xác nhận xóa',
           textAlign: TextAlign.center,
           style: TextStyle(
-              fontSize: 24, fontWeight: FontWeight.bold, color: ErrorColor),
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: errorColor,
+          ),
         ),
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             const SizedBox(height: 10),
             Text(
-              'Bạn chắc có muốn xóa bộ thẻ $name không? 🤔',
+              'Bạn có chắc muốn xóa bộ thẻ "${deck.title}" không? 🤔',
               textAlign: TextAlign.center,
-              style: TextStyle(
-                fontSize: 16,
-              ),
+              style: const TextStyle(fontSize: 16),
             ),
           ],
         ),
@@ -171,15 +172,22 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             children: [
               CustTextButton(
                 text: "Hủy",
-                onPressed: () => Navigator.of(context).pop(),
+                onPressed: () => Navigator.of(ctx).pop(),
               ),
               CustFilledButton(
                 text: "Xóa",
-                onPressed: () {
-                  Navigator.of(ctx).pushNamedAndRemoveUntil(
-                    DecksOverviewScreen.routeName,
-                    (route) => false,
-                  );
+                onPressed: () async {
+                  Navigator.of(ctx).pop();
+
+                  try {
+                    await _deleteDeck(deck);
+                    Navigator.of(context).pushNamedAndRemoveUntil(
+                      DecksOverviewScreen.routeName,
+                      (route) => false,
+                    );
+                  } catch (error) {
+                    await showErrorDialog(context, 'Có lỗi xảy ra');
+                  }
                 },
               ),
             ],

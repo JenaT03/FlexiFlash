@@ -1,6 +1,9 @@
+import 'package:ct484_project/ui/screen.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../models/flashcard.dart';
+import 'edit_flashcard_list_screen.dart';
 
 class FlashcardGridItem extends StatelessWidget {
   const FlashcardGridItem(
@@ -12,9 +15,10 @@ class FlashcardGridItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final flashManager = context.read<FlashcardManager>();
     return Container(
       width: 137,
-      height: 164,
+      height: 165,
       decoration: ShapeDecoration(
         color: Theme.of(context).colorScheme.surface,
         shape: RoundedRectangleBorder(
@@ -32,50 +36,84 @@ class FlashcardGridItem extends StatelessWidget {
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.max,
         children: [
-          Padding(
-            padding: const EdgeInsets.all(7.0),
-            child: Text(
-              flashcard.text,
-              style: TextStyle(
-                fontSize: 14,
-                color: Theme.of(context).colorScheme.onBackground,
-              ),
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
+          Expanded(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(7.0),
+                  child: Text(
+                    flashcard.text,
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                IconButton(
+                  onPressed: () => {
+                    context.read<FlashcardManager>().updateFlashcard(
+                          flashcard.copyWith(isMarked: !flashcard.isMarked),
+                          flashcard.deckId,
+                        ),
+                  },
+                  icon: Icon(
+                    flashcard.isMarked
+                        ? Icons.star_rounded
+                        : Icons.star_border_rounded,
+                    color: Colors.amber,
+                  ),
+                ),
+              ],
             ),
           ),
-          Container(
-            width: 140,
-            height: 120,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: NetworkImage(flashcard.imgURL),
-                fit: BoxFit.cover,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
+          Expanded(
+            flex: 3,
+            child: Container(
+              width: 130,
+              height: 120,
+              decoration: ShapeDecoration(
+                image: DecorationImage(
+                  image: NetworkImage(flashcard.imgURL),
+                  fit: BoxFit.cover,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
             ),
           ),
           const SizedBox(height: 5),
-          Row(
+          Expanded(
+              child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               IconButton(
-                onPressed: () => {},
+                onPressed: () => {
+                  Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
+                      arguments: {
+                        'deckId': flashcard.deckId,
+                        'flashcardId': flashcard.id
+                      }),
+                },
                 icon: Icon(Icons.edit),
                 color: Theme.of(context).colorScheme.primary,
               ),
               IconButton(
-                onPressed: () => {},
+                onPressed: () => {
+                  if (flashManager.onDeleteFlashcard != null)
+                    {flashManager.onDeleteFlashcard!(context, flashcard)}
+                },
                 icon: Icon(Icons.delete),
                 color: Theme.of(context).colorScheme.error,
               ),
             ],
-          )
+          ))
         ],
       ),
     );

@@ -102,19 +102,29 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                 ),
               ),
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                ShortButton(
-                  text: "Hoàn thành",
-                  onPressed: () => _saveForm('finish'),
-                ),
-                ShortButton(
-                  text: "Tiếp tục",
-                  onPressed: () => _saveForm('next'),
-                ),
-              ],
-            )
+            _addedflashcard.id == null
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ShortButton(
+                        text: "Hoàn thành",
+                        onPressed: () => _saveForm('finish'),
+                      ),
+                      ShortButton(
+                        text: "Tiếp tục",
+                        onPressed: () => _saveForm('next'),
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      ShortButton(
+                        text: "Lưu",
+                        onPressed: () => _saveForm('save edit'),
+                      ),
+                    ],
+                  )
           ],
         ),
       ),
@@ -276,15 +286,25 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
     try {
       final flashcardManager = context.read<FlashcardManager>();
 
-      await flashcardManager.addFlashcard(_deckId, _addedflashcard);
+      if (_addedflashcard.id == null) {
+        await flashcardManager.addFlashcard(_deckId, _addedflashcard);
+      } else {
+        await flashcardManager.updateFlashcard(_addedflashcard, _deckId);
+      }
 
       if (mounted) {
         if (text == 'next') {
           Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
               arguments: {'deckId': _deckId});
         } else {
-          int count = await flashcardManager.countFlashcardsInDeck(_deckId);
-          await showFinishDialog(context, count, _deckId);
+          if (text == 'finish') {
+            int count = await flashcardManager.countFlashcardsInDeck(_deckId);
+            await showFinishDialog(context, count, _deckId);
+          } else {
+            Navigator.of(context).pushReplacementNamed(
+                EditFlashcardListScreen.routeName,
+                arguments: _deckId);
+          }
         }
       }
     } catch (error) {
@@ -310,7 +330,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
           children: [
             const SizedBox(height: 10),
             Text(
-              '$count thẻ đã được tạo thành công',
+              'Bộ thẻ đã có $count thẻ',
               textAlign: TextAlign.center,
               style: TextStyle(
                 fontSize: 18,
@@ -319,7 +339,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Bạn muốn xem bộ thẻ vừa tạo hay quay lại trang chính?',
+              'Bạn muốn đi đến bộ thẻ này hay trở về trang chủ?',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.black54),
             ),

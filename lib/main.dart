@@ -92,9 +92,9 @@ class MyApp extends StatelessWidget {
 
               if (settings.name == AddFlashCardScreen.routeName) {
                 final arguments = settings.arguments as Map<String, dynamic>?;
+                final String deckId = arguments!['deckId'];
+                final String? flashcardId = arguments['flashcardId'];
 
-                final String? flashcardId = arguments!['flashcardId'];
-                final String deckId = arguments['deckId'];
                 return MaterialPageRoute(
                     settings: settings,
                     builder: (ctx) {

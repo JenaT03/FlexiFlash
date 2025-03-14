@@ -1,8 +1,11 @@
-import 'package:flutter/cupertino.dart';
+import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
+import '../../models/flashcard.dart';
+import 'flashcards_manager.dart';
 
 class FlashCard extends StatelessWidget {
-  const FlashCard({super.key});
+  const FlashCard(this.flashcard, {super.key});
+  final Flashcard flashcard;
 
   @override
   Widget build(BuildContext context) {
@@ -48,9 +51,18 @@ class FlashCard extends StatelessWidget {
                     ),
                   ),
                   IconButton(
-                    onPressed: () => {},
-                    icon: Icon(Icons.favorite_border),
-                    color: Theme.of(context).colorScheme.secondary,
+                    onPressed: () => {
+                      context.read<FlashcardManager>().updateFlashcard(
+                            flashcard.copyWith(isMarked: !flashcard.isMarked),
+                            flashcard.deckId,
+                          ),
+                    },
+                    icon: Icon(
+                      flashcard.isMarked
+                          ? Icons.star_rounded
+                          : Icons.star_border_rounded,
+                      color: Colors.amber,
+                    ),
                   ),
                 ],
               ),

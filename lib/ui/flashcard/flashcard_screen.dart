@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import '../screen.dart';
 
+import '../../models/flashcard.dart';
+
 class FlashcardScreen extends StatelessWidget {
   static const routeName = '/flashcard';
 
-  const FlashcardScreen({super.key});
+  const FlashcardScreen(this.flashcard, {super.key});
+  final Flashcard flashcard;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +44,7 @@ class FlashcardScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 40),
-          FlashCard(),
+          FlashCard(flashcard),
           const SizedBox(height: 40),
           Padding(
             padding: EdgeInsets.all(20.0),

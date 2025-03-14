@@ -1,5 +1,6 @@
 import 'package:ct484_project/services/flashcards_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 import '../../models/flashcard.dart';
 
 class FlashcardManager with ChangeNotifier {
@@ -42,7 +43,7 @@ class FlashcardManager with ChangeNotifier {
   Future<void> addFlashcard(String id, Flashcard flashcard) async {
     final newFlashcard =
         await _flashcardsService.addFlashcard(deckId: id, flashcard: flashcard);
-
+    print('newFlashcard $newFlashcard');
     if (newFlashcard != null) {
       _flashcards.add(newFlashcard);
 
@@ -100,5 +101,12 @@ class FlashcardManager with ChangeNotifier {
         _flashcards.where((flashcard) => flashcard.deckId == deckId).length;
 
     return count;
+  }
+
+  Future<void> Function(BuildContext, Flashcard)? onDeleteFlashcard;
+
+  void setOnDeleteFunction(
+      Future<void> Function(BuildContext, Flashcard) func) {
+    onDeleteFlashcard = func;
   }
 }

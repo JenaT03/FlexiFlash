@@ -4,10 +4,16 @@ import '../models/flashcard.dart';
 import './laravel_api_client.dart';
 
 class FlashcardsService {
-  Future<List<Flashcard>> fetchFlashcards({required String deckId}) async {
-    final List<Flashcard> flashcards = [];
+  Flashcard customeUrl(Flashcard initFlashcard) {
     final String storageUrl =
         'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
+    Flashcard flashcard = initFlashcard;
+    flashcard = flashcard.copyWith(imgURL: "$storageUrl${flashcard.imgURL}");
+    return flashcard;
+  }
+
+  Future<List<Flashcard>> fetchFlashcards({required String deckId}) async {
+    final List<Flashcard> flashcards = [];
     try {
       final client = await LaravelApiClient.getInstance();
 
@@ -16,9 +22,7 @@ class FlashcardsService {
         final data = response.data['flashcards'] as List;
         for (final flashcardData in data) {
           Flashcard flashcard = Flashcard.fromJson(flashcardData);
-          flashcard =
-              flashcard.copyWith(imgURL: "$storageUrl${flashcard.imgURL}");
-          flashcards.add(flashcard);
+          flashcards.add(customeUrl(flashcard));
         }
       }
 
@@ -55,7 +59,6 @@ class FlashcardsService {
       {required String deckId, required Flashcard flashcard}) async {
     try {
       final client = await LaravelApiClient.getInstance();
-
       final response = await client.dio.post(
         '/decks/$deckId/flashcards',
         data: FormData.fromMap({
@@ -73,7 +76,8 @@ class FlashcardsService {
         ),
       );
 
-      return Flashcard.fromJson(response.data['flashcard']);
+      Flashcard addedFlashcard = Flashcard.fromJson(response.data['flashcard']);
+      return customeUrl(addedFlashcard);
     } catch (error) {
       print('Lỗi adding flashcard: $error');
       return null;
@@ -116,8 +120,8 @@ class FlashcardsService {
         );
 
         if (response.statusCode == 200) {
-          final data = response.data['flashcard'];
-          return Flashcard.fromJson(data);
+          Flashcard flashcard = Flashcard.fromJson(response.data['flashcard']);
+          return customeUrl(flashcard);
         }
       } else {
         // Sử dụng PATCH thông thường nếu không có file
@@ -127,8 +131,8 @@ class FlashcardsService {
         );
 
         if (response.statusCode == 200) {
-          final data = response.data['flashcard'];
-          return Flashcard.fromJson(data);
+          Flashcard flashcard = Flashcard.fromJson(response.data['flashcard']);
+          return customeUrl(flashcard);
         }
       }
 

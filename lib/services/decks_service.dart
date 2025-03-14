@@ -117,7 +117,6 @@ class DecksService {
             },
           ),
         );
-        print('updateddacek ${response.data['deck']}');
         if (response.statusCode == 200) {
           Deck updatedDeck = Deck.fromJson(response.data['deck']);
 
