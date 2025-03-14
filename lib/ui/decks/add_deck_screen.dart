@@ -74,14 +74,23 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         margin: EdgeInsets.only(top: 40, left: 10, right: 10),
         child: Column(
           children: [
-            const Text(
-              'TẠO BỘ THẺ MỚI',
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-              textAlign: TextAlign.center,
-            ),
+            _addedDeck.id == null
+                ? const Text(
+                    'TẠO BỘ THẺ MỚI',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  )
+                : const Text(
+                    'CHỈNH SỬA BỘ THẺ',
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
             const SizedBox(height: 40),
             Expanded(
               child: Form(
@@ -112,7 +121,9 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                     children: [
                       ShortButton(
                         text: 'Chỉnh sửa thẻ',
-                        onPressed: () => Navigator.of(context).pop(),
+                        onPressed: () => Navigator.of(context).pushNamed(
+                            EditFlashcardListScreen.routeName,
+                            arguments: _addedDeck.id),
                       ),
                       ShortButton(
                         text: "Lưu",
@@ -235,6 +246,8 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
     final isValid = _addForm.currentState!.validate() && _addedDeck.hasImage();
 
     if (!isValid) {
+      await showInforDialog(
+          context, 'Có vấn đề với nội dung của bạn, vui lòng xem lại');
       return;
     }
     _addForm.currentState!.save();
@@ -260,23 +273,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
       }
     } catch (error) {
       print("Lỗi xảy ra: $error");
-      await showErrorDialog(context, 'Có lỗi xảy ra');
+      await showErrorDialog(context, 'Xin lỗi không thể lưu bộ thẻ này');
     }
-  }
-
-  Future<void> showErrorDialog(BuildContext context, String message) {
-    return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-                icon: const Icon(Icons.error),
-                title: const Text('Lỗi trong quá trình lưu!'),
-                content: Text(message),
-                actions: <Widget>[
-                  ActionButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ]));
   }
 }

@@ -18,8 +18,8 @@ export 'flashcard/quiz.dart';
 export 'flashcard/finish_quiz.dart';
 export 'flashcard/add_flashcard_screen.dart';
 export 'flashcard/flashcards_manager.dart';
-
 export 'flashcard/flashcard_grid.dart';
+export 'flashcard/edit_flashcard_list_screen.dart';
 
 export 'decks/user_decks_screen.dart';
 export 'decks/decks_manager.dart';

@@ -240,7 +240,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
           setState(() {});
         } catch (error) {
           if (mounted) {
-            showErrorDialog(context, 'Something went wrong');
+            await showErrorDialog(context, 'Lỗi không thể chọn ảnh');
           }
         }
       },
@@ -264,8 +264,11 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   }
 
   Future<void> _saveForm(String text) async {
-    final isValid = _addForm.currentState!.validate();
+    final isValid =
+        _addForm.currentState!.validate() && _addedflashcard.hasImage();
     if (!isValid) {
+      await showInforDialog(
+          context, 'Có vấn đề với nội dung của bạn, vui lòng xem lại');
       return;
     }
 
@@ -285,24 +288,8 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
         }
       }
     } catch (error) {
-      await showErrorDialog(context, 'Có lỗi xảy ra');
+      await showErrorDialog(context, 'Xin lỗi không thể lưu thẻ này');
     }
-  }
-
-  Future<void> showErrorDialog(BuildContext context, String message) {
-    return showDialog(
-        context: context,
-        builder: (ctx) => AlertDialog(
-                icon: const Icon(Icons.error),
-                title: const Text('Lỗi trong quá trính lưu!'),
-                content: Text(message),
-                actions: <Widget>[
-                  ActionButton(
-                    onPressed: () {
-                      Navigator.of(ctx).pop();
-                    },
-                  )
-                ]));
   }
 
   Future<void> showFinishDialog(BuildContext context, int count, String id) {
@@ -344,15 +331,19 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
             children: [
               CustTextButton(
                 text: "Xem bộ thẻ",
-                onPressed: () => Navigator.of(context).pushNamed(
+                onPressed: () => Navigator.of(context).pushNamedAndRemoveUntil(
                   DeckDetailScreen.routeName,
                   arguments: id,
+                  (route) => false,
                 ),
               ),
               CustFilledButton(
                 text: "Trở về",
                 onPressed: () {
-                  Navigator.of(ctx).pushNamed(UserDecksScreen.routeName);
+                  Navigator.of(ctx).pushNamedAndRemoveUntil(
+                    UserDecksScreen.routeName,
+                    (route) => false,
+                  );
                 },
               ),
             ],

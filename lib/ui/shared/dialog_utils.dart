@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Future<bool?> showConfirmDialog(BuildContext context, String message) {
+Future<bool?> showInforDialog(BuildContext context, String message) {
   final primaryColor = Theme.of(context).colorScheme.primary;
 
   return showDialog(
@@ -8,7 +8,7 @@ Future<bool?> showConfirmDialog(BuildContext context, String message) {
     builder: (ctx) => AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
       title: Text(
-        'Xác nhận',
+        'Thông báo 📢',
         textAlign: TextAlign.center,
         style: TextStyle(
             fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
@@ -32,7 +32,7 @@ Future<bool?> showConfirmDialog(BuildContext context, String message) {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             CustFilledButton(
-              text: 'Hủy',
+              text: 'Okey',
               onPressed: () {
                 Navigator.of(ctx).pop();
               },
@@ -45,17 +45,43 @@ Future<bool?> showConfirmDialog(BuildContext context, String message) {
 }
 
 Future<void> showErrorDialog(BuildContext context, String message) {
+  final errorColor = Theme.of(context).colorScheme.error;
+
   return showDialog(
     context: context,
     builder: (ctx) => AlertDialog(
-      icon: const Icon(Icons.error),
-      title: const Text('An Error Occurred!'),
-      content: Text(message),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Oops, có lõi xảy ra 😱',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 24, fontWeight: FontWeight.bold, color: errorColor),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 10),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
       actions: <Widget>[
-        ActionButton(
-          onPressed: () {
-            Navigator.of(ctx).pop();
-          },
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CustTextButton(
+              text: 'Okey',
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
         ),
       ],
     ),

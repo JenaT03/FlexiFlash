@@ -110,6 +110,19 @@ class MyApp extends StatelessWidget {
                       );
                     });
               }
+
+              if (settings.name == EditFlashcardListScreen.routeName) {
+                final deckId = settings.arguments as String;
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (ctx) {
+                      return SafeArea(
+                        child: EditFlashcardListScreen(
+                          deckId: deckId,
+                        ),
+                      );
+                    });
+              }
               return null;
             },
           );

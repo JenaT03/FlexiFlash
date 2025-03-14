@@ -4,10 +4,16 @@ import './laravel_api_client.dart';
 import 'package:dio/dio.dart';
 
 class DecksService {
-  Future<List<Deck>> fetchDecks({bool filteredByUser = false}) async {
-    final List<Deck> decks = [];
+  Deck customeUrl(Deck initDeck) {
     final String storageUrl =
         'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
+    Deck deck = initDeck;
+    deck = deck.copyWith(imageBg: "$storageUrl${deck.imageBg}");
+    return deck;
+  }
+
+  Future<List<Deck>> fetchDecks({bool filteredByUser = false}) async {
+    final List<Deck> decks = [];
 
     try {
       final client = await LaravelApiClient.getInstance();
@@ -19,8 +25,7 @@ class DecksService {
         final data = response.data['decks'] as List;
         for (final deckData in data) {
           Deck deck = Deck.fromJson(deckData);
-          deck = deck.copyWith(imageBg: "$storageUrl${deck.imageBg}");
-          decks.add(deck);
+          decks.add(customeUrl(deck));
         }
       }
 
@@ -32,16 +37,13 @@ class DecksService {
   }
 
   Future<Deck?> fetchDeckById(String id) async {
-    final String storageUrl =
-        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       final client = await LaravelApiClient.getInstance();
       final response = await client.dio.get('/decks/$id');
       if (response.statusCode == 200) {
         final data = response.data['deck'];
         Deck deck = Deck.fromJson(data);
-        deck = deck.copyWith(imageBg: "$storageUrl${deck.imageBg}");
-        return deck;
+        return customeUrl(deck);
       }
 
       return null;
@@ -52,8 +54,6 @@ class DecksService {
   }
 
   Future<Deck?> addDeck(Deck deck) async {
-    final String storageUrl =
-        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       final client = await LaravelApiClient.getInstance();
       final userId = await client.getUserId();
@@ -75,9 +75,7 @@ class DecksService {
         ),
       );
       Deck addedDeck = Deck.fromJson(response.data['deck']);
-      addedDeck =
-          addedDeck.copyWith(imageBg: "$storageUrl${addedDeck.imageBg}");
-      return addedDeck;
+      return customeUrl(addedDeck);
     } catch (e) {
       if (e is DioException) {
         print('Lỗi khi thêm deck: ${e.response?.data}');
@@ -89,8 +87,6 @@ class DecksService {
   }
 
   Future<Deck?> updateDeck(Deck deck) async {
-    final String storageUrl =
-        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       if (deck.id == null) {
         throw Exception('Cannot update deck without id');
@@ -124,10 +120,8 @@ class DecksService {
         print('updateddacek ${response.data['deck']}');
         if (response.statusCode == 200) {
           Deck updatedDeck = Deck.fromJson(response.data['deck']);
-          updatedDeck = updatedDeck.copyWith(
-              imageBg: "$storageUrl${updatedDeck.imageBg}");
-          print('updateddacek ${updatedDeck.imageBg}');
-          return updatedDeck;
+
+          return customeUrl(updatedDeck);
         }
       } else {
         // Sử dụng PATCH thông thường nếu không có file
@@ -138,10 +132,8 @@ class DecksService {
 
         if (response.statusCode == 200) {
           Deck updatedDeck = Deck.fromJson(response.data['deck']);
-          updatedDeck = updatedDeck.copyWith(
-              imageBg: "$storageUrl${updatedDeck.imageBg}");
-          print('updateddacek ${updatedDeck.imageBg}');
-          return updatedDeck;
+
+          return customeUrl(updatedDeck);
         }
       }
 

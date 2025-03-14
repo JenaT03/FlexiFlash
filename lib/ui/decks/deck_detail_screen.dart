@@ -176,7 +176,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
               CustFilledButton(
                 text: "Xóa",
                 onPressed: () {
-                  Navigator.of(ctx).pushNamed(DecksOverviewScreen.routeName);
+                  Navigator.of(ctx).pushNamedAndRemoveUntil(
+                    DecksOverviewScreen.routeName,
+                    (route) => false,
+                  );
                 },
               ),
             ],

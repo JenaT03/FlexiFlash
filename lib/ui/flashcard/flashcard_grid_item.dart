@@ -34,21 +34,8 @@ class FlashcardGridItem extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Container(
-            width: 140,
-            height: 130,
-            decoration: ShapeDecoration(
-              image: DecorationImage(
-                image: NetworkImage(flashcard.imgURL),
-                fit: BoxFit.cover,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-            ),
-          ),
           Padding(
-            padding: const EdgeInsets.all(12.0),
+            padding: const EdgeInsets.all(7.0),
             child: Text(
               flashcard.text,
               style: TextStyle(
@@ -60,7 +47,20 @@ class FlashcardGridItem extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
           ),
-          const SizedBox(height: 10),
+          Container(
+            width: 140,
+            height: 120,
+            decoration: ShapeDecoration(
+              image: DecorationImage(
+                image: NetworkImage(flashcard.imgURL),
+                fit: BoxFit.cover,
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(height: 5),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
