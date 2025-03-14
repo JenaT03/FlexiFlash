@@ -281,7 +281,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
               arguments: {'deckId': _deckId});
         } else {
           int count = await flashcardManager.countFlashcardsInDeck(_deckId);
-          await showFinishDialog(context, count);
+          await showFinishDialog(context, count, _deckId);
         }
       }
     } catch (error) {
@@ -305,7 +305,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                 ]));
   }
 
-  Future<void> showFinishDialog(BuildContext context, int count) {
+  Future<void> showFinishDialog(BuildContext context, int count, String id) {
     final primaryColor = Theme.of(context).colorScheme.primary;
 
     return showDialog(
@@ -332,7 +332,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
             ),
             const SizedBox(height: 10),
             Text(
-              'Bạn muốn tạo bộ thẻ mới hay quay lại trang chính?',
+              'Bạn muốn xem bộ thẻ vừa tạo hay quay lại trang chính?',
               textAlign: TextAlign.center,
               style: TextStyle(fontSize: 14, color: Colors.black54),
             ),
@@ -343,9 +343,11 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               CustTextButton(
-                text: "Tạo bộ thẻ mới",
-                onPressed: () =>
-                    Navigator.of(context).pushNamed(AddDeckScreen.routeName),
+                text: "Xem bộ thẻ",
+                onPressed: () => Navigator.of(context).pushNamed(
+                  DeckDetailScreen.routeName,
+                  arguments: id,
+                ),
               ),
               CustFilledButton(
                 text: "Trở về",

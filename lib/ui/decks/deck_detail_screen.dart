@@ -104,7 +104,12 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             children: [
               ShortButton(
                 text: "Sửa bộ thẻ",
-                onPressed: () => {},
+                onPressed: () => {
+                  Navigator.of(context).pushNamed(
+                    AddDeckScreen.routeName,
+                    arguments: widget.deck.id,
+                  )
+                },
               ),
               WarningButton(
                 text: "Xóa bộ thẻ",

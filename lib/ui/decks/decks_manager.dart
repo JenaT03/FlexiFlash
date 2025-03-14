@@ -52,7 +52,7 @@ class DecksManager with ChangeNotifier {
   }
 
   // Cập nhật deck
-  Future<void> updateDeck(Deck deck) async {
+  Future<String?> updateDeck(Deck deck) async {
     final index = _decks.indexWhere((item) => item.id == deck.id);
 
     if (index >= 0) {
@@ -60,6 +60,7 @@ class DecksManager with ChangeNotifier {
       if (updatedDeck != null) {
         _decks[index] = updatedDeck;
         notifyListeners();
+        return updatedDeck.id;
       }
     }
   }

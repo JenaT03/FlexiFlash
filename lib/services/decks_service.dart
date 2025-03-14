@@ -52,6 +52,8 @@ class DecksService {
   }
 
   Future<Deck?> addDeck(Deck deck) async {
+    final String storageUrl =
+        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       final client = await LaravelApiClient.getInstance();
       final userId = await client.getUserId();
@@ -72,8 +74,10 @@ class DecksService {
           },
         ),
       );
-
-      return Deck.fromJson(response.data['deck']);
+      Deck addedDeck = Deck.fromJson(response.data['deck']);
+      addedDeck =
+          addedDeck.copyWith(imageBg: "$storageUrl${addedDeck.imageBg}");
+      return addedDeck;
     } catch (e) {
       if (e is DioException) {
         print('Lỗi khi thêm deck: ${e.response?.data}');
@@ -85,6 +89,8 @@ class DecksService {
   }
 
   Future<Deck?> updateDeck(Deck deck) async {
+    final String storageUrl =
+        'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     try {
       if (deck.id == null) {
         throw Exception('Cannot update deck without id');
@@ -115,10 +121,13 @@ class DecksService {
             },
           ),
         );
-
+        print('updateddacek ${response.data['deck']}');
         if (response.statusCode == 200) {
-          final data = response.data['deck'];
-          return Deck.fromJson(data);
+          Deck updatedDeck = Deck.fromJson(response.data['deck']);
+          updatedDeck = updatedDeck.copyWith(
+              imageBg: "$storageUrl${updatedDeck.imageBg}");
+          print('updateddacek ${updatedDeck.imageBg}');
+          return updatedDeck;
         }
       } else {
         // Sử dụng PATCH thông thường nếu không có file
@@ -128,8 +137,11 @@ class DecksService {
         );
 
         if (response.statusCode == 200) {
-          final data = response.data['deck'];
-          return Deck.fromJson(data);
+          Deck updatedDeck = Deck.fromJson(response.data['deck']);
+          updatedDeck = updatedDeck.copyWith(
+              imageBg: "$storageUrl${updatedDeck.imageBg}");
+          print('updateddacek ${updatedDeck.imageBg}');
+          return updatedDeck;
         }
       }
 

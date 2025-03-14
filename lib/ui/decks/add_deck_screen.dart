@@ -232,7 +232,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
   }
 
   Future<void> _saveForm() async {
-    final isValid = _addForm.currentState!.validate();
+    final isValid = _addForm.currentState!.validate() && _addedDeck.hasImage();
 
     if (!isValid) {
       return;
@@ -241,10 +241,22 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
 
     try {
       final deckManager = context.read<DecksManager>();
-      String? deckId = await deckManager.addDeck(_addedDeck);
-      if (mounted) {
-        Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
-            arguments: {'deckId': deckId});
+      if (_addedDeck.id == null) {
+        String? deckId = await deckManager.addDeck(_addedDeck);
+        if (mounted) {
+          Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
+              arguments: {'deckId': deckId});
+        }
+      } else {
+        String? deckId = await deckManager.updateDeck(_addedDeck);
+        FocusScope.of(context).unfocus();
+        await Future.delayed(Duration(milliseconds: 200));
+        if (mounted) {
+          Navigator.of(context).pushNamed(
+            DeckDetailScreen.routeName,
+            arguments: deckId,
+          );
+        }
       }
     } catch (error) {
       print("Lỗi xảy ra: $error");
