@@ -64,7 +64,8 @@ class Flashcard {
       imgURL: json['imgUrl'],
       description: json['description'],
       language: json['language'],
-      isMarked: json['isMarked'] == 1 ? true : false,
+      isMarked:
+          json['isMarked'] == 1 || json['isMarked'] == true ? true : false,
       deckId: json['deckId'],
     );
   }

@@ -126,7 +126,8 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
                       icon: Icon(Icons.arrow_back_ios_rounded, size: 50),
                     ),
                     IconButton(
-                      onPressed: () => flashcardManager.speak(flashcard),
+                      onPressed: () =>
+                          flashcardManager.speak(flashcard, flashcard.text),
                       icon: Icon(Icons.volume_up_rounded, size: 50),
                     ),
                     IconButton(

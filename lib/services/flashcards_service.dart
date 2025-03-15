@@ -9,6 +9,7 @@ class FlashcardsService {
         'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     Flashcard flashcard = initFlashcard;
     flashcard = flashcard.copyWith(imgURL: "$storageUrl${flashcard.imgURL}");
+
     return flashcard;
   }
 

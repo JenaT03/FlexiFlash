@@ -147,6 +147,21 @@ class MyApp extends StatelessWidget {
                 );
               }
 
+              if (settings.name == FlashCardDetail.routeName) {
+                final flashcardId = settings.arguments as String;
+
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (ctx) {
+                      return SafeArea(
+                        child: FlashCardDetail(
+                          flashcard: ctx
+                              .read<FlashcardManager>()
+                              .findById(flashcardId)!,
+                        ),
+                      );
+                    });
+              }
               return null;
             },
           );

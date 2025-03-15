@@ -61,6 +61,7 @@ class FlashcardManager with ChangeNotifier {
           deckId: deckId, flashcard: flashcard);
       if (updatedFlashcard != null) {
         _flashcards[index] = updatedFlashcard;
+
         notifyListeners();
       }
     }
@@ -105,10 +106,10 @@ class FlashcardManager with ChangeNotifier {
     onDeleteFlashcard = func;
   }
 
-  Future<void> speak(Flashcard flashcard) async {
+  Future<void> speak(Flashcard flashcard, String text) async {
     await _tts.setLanguage(flashcard.language);
     await _tts.setSpeechRate(0.5); // Tốc độ đọc
-    await _tts.speak(flashcard.text);
+    await _tts.speak(text);
   }
 
   void stop() {

@@ -1,12 +1,29 @@
+import 'package:ct484_project/models/deck.dart';
+import 'package:ct484_project/models/flashcard.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../screen.dart';
 
 class FlashCardDetail extends StatelessWidget {
-  const FlashCardDetail({super.key});
+  static const routeName = '/flashcard_detail';
 
+  const FlashCardDetail({super.key, required this.flashcard});
+
+  final Flashcard flashcard;
   @override
   Widget build(BuildContext context) {
+    final Deck? deck = context.read<DecksManager>().findById(flashcard.deckId);
+
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            context.read<FlashcardManager>().stop(); // Dừng TTS khi quay lại
+            Navigator.pop(context);
+          },
+        ),
+        centerTitle: true,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -26,11 +43,10 @@ class FlashCardDetail extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 20),
               Padding(
                 padding: EdgeInsets.symmetric(vertical: 24.0, horizontal: 20.0),
                 child: Text(
-                  'Nấm độc tại rừng quốc gia Việt Nam',
+                  deck != null ? deck.title : 'Lỗi không thể hiện tên bộ thẻ',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                     color: Theme.of(context).colorScheme.onBackground,
@@ -39,9 +55,8 @@ class FlashCardDetail extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(height: 30),
               Text(
-                "Nấm phiến đốm chuông",
+                flashcard.text,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,
                   fontSize: 16,
@@ -59,31 +74,39 @@ class FlashCardDetail extends StatelessWidget {
               ),
               const SizedBox(height: 10),
               Container(
-                width: 180,
-                height: 140,
                 decoration: ShapeDecoration(
-                  image: DecorationImage(
-                    image: NetworkImage(
-                        "https://toongadventure.vn/wp-content/uploads/2021/05/2411-0-2ef4e0e42889ca05c07f8f3bee359d30.jpeg"),
-                    fit: BoxFit.fill,
-                  ),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(20),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10),
-              Text(
-                "Mô tả chi tiết",
-                style: TextStyle(
-                  fontStyle: FontStyle.italic,
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.onBackground,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20), // Giữ bo góc
+                  child: Image.network(flashcard.imgURL),
                 ),
               ),
               const SizedBox(height: 10),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "Mô tả chi tiết",
+                    style: TextStyle(
+                      fontStyle: FontStyle.italic,
+                      fontSize: 16,
+                      color: Theme.of(context).colorScheme.onBackground,
+                    ),
+                  ),
+                  IconButton(
+                    onPressed: () => context
+                        .read<FlashcardManager>()
+                        .speak(flashcard, flashcard.description),
+                    icon: Icon(Icons.volume_up_rounded, size: 30),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
               Text(
-                "Tuy có kích thước nhỏ nhưng nồng độ chất độc lại khá cao. Khi ăn phải một lượng nhiều, nấm có thể gây ảo giác, thậm chí là tử vong. Mũ nấm hình chuông, đường kính từ 2 đến 3.5cm. Các phiến có vân, màu xanh rồi đen. Nấm có lớp thịt mỏng, màu da sơn dương.  Những chất độc gây ảo giác nằm ở phiến đốm chuông không mùi.  Bạn có thể tìm thấy nấm phiến đốm chuông trên phân hoại mục ở các bãi cỏ từ tháng 1 đến tháng 9 hằng năm.Tuy có kích thước nhỏ nhưng nồng độ chất độc lại khá cao. Khi ăn phải một lượng nhiều, nấm có thể gây ảo giác, thậm chí là tử vong. Mũ nấm hình chuông, đường kính từ 2 đến 3.5cm. Các phiến có vân, màu xanh rồi đen. Nấm có lớp thịt mỏng, màu da sơn dương.  Những chất độc gây ảo giác nằm ở phiến đốm chuông không mùi.  Bạn có thể tìm thấy nấm phiến đốm chuông trên phân hoại mục ở các bãi cỏ từ tháng 1 đến tháng 9 hằng năm.Tuy có kích thước nhỏ nhưng nồng độ chất độc lại khá cao. Khi ăn phải một lượng nhiều, nấm có thể gây ảo giác, thậm chí là tử vong. Mũ nấm hình chuông, đường kính từ 2 đến 3.5cm. Các phiến có vân, màu xanh rồi đen. Nấm có lớp thịt mỏng, màu da sơn dương.  Những chất độc gây ảo giác nằm ở phiến đốm chuông không mùi.  Bạn có thể tìm thấy nấm phiến đốm chuông trên phân hoại mục ở các bãi cỏ từ tháng 1 đến tháng 9 hằng năm.",
+                flashcard.description,
                 style: TextStyle(
                   fontSize: 16,
                   color: Theme.of(context).colorScheme.onBackground,
