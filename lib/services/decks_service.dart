@@ -9,6 +9,7 @@ class DecksService {
         'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     Deck deck = initDeck;
     deck = deck.copyWith(imageBg: "$storageUrl${deck.imageBg}");
+
     return deck;
   }
 
@@ -131,7 +132,6 @@ class DecksService {
 
         if (response.statusCode == 200) {
           Deck updatedDeck = Deck.fromJson(response.data['deck']);
-
           return customeUrl(updatedDeck);
         }
       }

@@ -1,21 +1,13 @@
 import 'package:ct484_project/services/flashcards_service.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter/material.dart';
 import '../../models/flashcard.dart';
 
 class FlashcardManager with ChangeNotifier {
   final FlashcardsService _flashcardsService = FlashcardsService();
-  List<Flashcard> _flashcards = [
-    Flashcard(
-        id: 'f1',
-        text: 'Nấm độc tán trắng',
-        imgURL:
-            'https://toongadventure.vn/wp-content/uploads/2021/05/lucie-hosova-EFw-2XoOt6w-unsplash-768x512.jpg',
-        description:
-            '10 loại nấm độc khi trekking xuyên rừng quốc gia Việt Nam. Các trekkers đã ít nhất một lần đến khám phá các khu rừng quốc gia Việt Nam sẽ bất ngờ với hệ sinh thái đa dạng nơi đây. Từ các loài hoa đến các loại quả, đều là những loại thực vật lần đầu tiên bạn nhìn thấy. Việc bắt gặp những loài hoa, thức quả rừng lạ có thể mang đến nhiều trải nghiệm và kiến thức mới lạ. Có thể đó là thứ bạn có thể dùng như một món ăn. Nhưng cũng có những loại thực vật bạn tuyệt đối không thể ăn, đặc biệt là nấm. Bài viết này sẽ giúp bạn hiểu rõ hơn về những loài nấm độc bạn có thể bắt gặp trên chặng đường trekking của mình.Nấm độc tán trắng Loại nấm này có tên khoa học là Amanita Verna. Bạn có thể bắt gặp loại nấm này mọc thành từng cụm hoặc đơn chiếc. Tại Việt Nam, bạn sẽ tìm thấy loài nấm tán trắng này ở các tỉnh phía Bắc như Hà Giang, Tuyên Quang, Thái Nguyên, Yên Bái, Bắc Cạn, Phú Thọ…',
-        deckId: 'd1',
-        language: 'vi-VN'),
-  ];
+  final FlutterTts _tts = FlutterTts();
+  List<Flashcard> _flashcards = [];
 
   // Getter để lấy tất cả flashcard
   List<Flashcard> get flashcards => [..._flashcards];
@@ -33,7 +25,11 @@ class FlashcardManager with ChangeNotifier {
   }
 
   // Lấy flashcard theo deckId
-  List<Flashcard> getFlashcardsByDeck(String deckId) {
+  Future<List<Flashcard>> getFlashcardsByDeck(String deckId) async {
+    await fetchFlashCards(deckId);
+    for (int i = 0; i < _flashcards.length; i++) {
+      print("Flashcard $i: ${_flashcards[i]}");
+    }
     return _flashcards
         .where((flashcard) => flashcard.deckId == deckId)
         .toList();
@@ -43,7 +39,6 @@ class FlashcardManager with ChangeNotifier {
   Future<void> addFlashcard(String id, Flashcard flashcard) async {
     final newFlashcard =
         await _flashcardsService.addFlashcard(deckId: id, flashcard: flashcard);
-    print('newFlashcard $newFlashcard');
     if (newFlashcard != null) {
       _flashcards.add(newFlashcard);
 
@@ -108,5 +103,15 @@ class FlashcardManager with ChangeNotifier {
   void setOnDeleteFunction(
       Future<void> Function(BuildContext, Flashcard) func) {
     onDeleteFlashcard = func;
+  }
+
+  Future<void> speak(Flashcard flashcard) async {
+    await _tts.setLanguage(flashcard.language);
+    await _tts.setSpeechRate(0.5); // Tốc độ đọc
+    await _tts.speak(flashcard.text);
+  }
+
+  void stop() {
+    _tts.stop();
   }
 }

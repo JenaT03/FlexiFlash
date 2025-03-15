@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../models/flashcard.dart';
-import 'edit_flashcard_list_screen.dart';
 
 class FlashcardGridItem extends StatelessWidget {
   const FlashcardGridItem(

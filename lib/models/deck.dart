@@ -61,8 +61,11 @@ class Deck {
       title: json['title'],
       type: json['type'],
       imageBg: json['imageBg'],
-      isFavorite: json['isFavorite'] == 1 ? true : false,
-      isSuperUser: json['isSuperUser'] == 1 ? true : false,
+      isFavorite:
+          json['isFavorite'] == 1 || json['isFavorite'] == true ? true : false,
+      isSuperUser: json['isSuperUser'] == 1 || json['isSuperUser'] == true
+          ? true
+          : false,
       userId: json['userId'],
     );
   }

@@ -73,8 +73,7 @@ class FlashCard extends StatelessWidget {
               height: 200,
               decoration: ShapeDecoration(
                 image: DecorationImage(
-                  image: NetworkImage(
-                      "https://toongadventure.vn/wp-content/uploads/2021/05/2411-0-2ef4e0e42889ca05c07f8f3bee359d30.jpeg"),
+                  image: NetworkImage(flashcard.imgURL),
                   fit: BoxFit.cover,
                 ),
                 shape: RoundedRectangleBorder(
@@ -90,7 +89,7 @@ class FlashCard extends StatelessWidget {
                 bottom: 28.0,
               ),
               child: Text(
-                "Nấm phiến đốm chuông",
+                flashcard.text,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: Theme.of(context).colorScheme.onBackground,

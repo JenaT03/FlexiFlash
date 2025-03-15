@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'ui/screen.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'models/flashcard.dart';
 
 Future<void> main() async {
   await dotenv.load();
@@ -123,6 +124,29 @@ class MyApp extends StatelessWidget {
                       );
                     });
               }
+
+              if (settings.name == FlashcardScreen.routeName) {
+                final deckId = settings.arguments as String?;
+
+                if (deckId == null) {
+                  return MaterialPageRoute(
+                    builder: (ctx) => Scaffold(
+                      body: Center(
+                          child: Text("Lỗi: Không tìm thấy bộ thẻ này! 🧐")),
+                    ),
+                  );
+                }
+
+                return MaterialPageRoute(
+                  settings: settings,
+                  builder: (ctx) {
+                    return SafeArea(
+                      child: FlashcardScreen(deckId: deckId),
+                    );
+                  },
+                );
+              }
+
               return null;
             },
           );

@@ -29,7 +29,6 @@ class DecksManager with ChangeNotifier {
   Deck? findById(String id) {
     try {
       final deck = _decks.firstWhere((deck) => deck.id == id);
-      print('deckmig ${deck.imageBg}');
       return deck;
     } catch (error) {
       return null;
@@ -54,7 +53,6 @@ class DecksManager with ChangeNotifier {
   // Cập nhật deck
   Future<String?> updateDeck(Deck deck) async {
     final index = _decks.indexWhere((item) => item.id == deck.id);
-
     if (index >= 0) {
       final updatedDeck = await _decksService.updateDeck(deck);
       if (updatedDeck != null) {

@@ -52,12 +52,10 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
                 ),
               ),
               Positioned(
-                right: 0,
-                child: IconButton(
-                  onPressed: () => {},
-                  icon: FavorIcon(widget.deck),
-                ),
-              ),
+                  right: 5,
+                  child: FavorButton(
+                    deck: widget.deck,
+                  )),
             ],
           ),
           const SizedBox(height: 20),
@@ -79,7 +77,13 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             child: LongButton(
               text: 'Xem tất cả thẻ',
               icon: Icons.auto_awesome_motion,
-              onPressed: () {},
+              onPressed: () {
+                print('id widget ${widget.deck.id}');
+                Navigator.of(context).pushNamed(
+                  FlashcardScreen.routeName,
+                  arguments: widget.deck.id,
+                );
+              },
             ),
           ),
           Padding(
@@ -99,24 +103,29 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              ShortButton(
-                text: "Sửa bộ thẻ",
-                onPressed: () => {
-                  Navigator.of(context).pushNamed(
-                    AddDeckScreen.routeName,
-                    arguments: widget.deck.id,
-                  )
-                },
-              ),
-              WarningButton(
-                text: "Xóa bộ thẻ",
-                onPressed: () => showConfirmDialog(context, widget.deck),
-              )
-            ],
-          )
+          if (!widget.deck.isSuperUser)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ShortButton(
+                  text: "Sửa bộ thẻ",
+                  onPressed: () => {
+                    Navigator.of(context).pushNamed(
+                      AddDeckScreen.routeName,
+                      arguments: widget.deck.id,
+                    )
+                  },
+                ),
+                WarningButton(
+                  text: "Xóa bộ thẻ",
+                  onPressed: () async {
+                    if (mounted) {
+                      await showConfirmDialog(context, widget.deck);
+                    }
+                  },
+                )
+              ],
+            )
         ],
       ),
       bottomNavigationBar:
@@ -127,13 +136,15 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
 
   Future<void> _deleteDeck(Deck? deck) async {
     if (deck == null) return;
+    final deckManager = context.read<DecksManager>();
 
     try {
-      final deckManager = context.read<DecksManager>();
       await deckManager.deleteDeck(deck.id!);
       return;
     } catch (error) {
-      await showErrorDialog(context, 'Có lỗi xảy ra');
+      if (mounted) {
+        await showErrorDialog(context, 'Có lỗi xảy ra');
+      }
     }
   }
 
@@ -198,59 +209,57 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
   }
 }
 
-class FavorIcon extends StatefulWidget {
-  const FavorIcon(
-    this.deck, {
-    super.key,
-  });
+class FavorButton extends StatelessWidget {
+  const FavorButton({super.key, required this.deck});
 
   final Deck deck;
 
   @override
-  State<FavorIcon> createState() => _FavorIconState();
-}
-
-class _FavorIconState extends State<FavorIcon> {
-  @override
   Widget build(BuildContext context) {
-    return ElevatedButton.icon(
-      onPressed: () {
-        setState(() {
-          widget.deck.isFavorite = !widget.deck.isFavorite;
-        });
+    return Consumer<DecksManager>(
+      builder: (context, decksManager, child) {
+        final updatedDeck = decksManager.findById(deck.id!) ?? deck;
+
+        return ElevatedButton.icon(
+          onPressed: () {
+            decksManager.updateDeck(
+              updatedDeck.copyWith(isFavorite: !updatedDeck.isFavorite),
+            );
+          },
+          icon: Icon(
+            updatedDeck.isFavorite ? Icons.favorite : Icons.favorite_border,
+            color: updatedDeck.isFavorite
+                ? Colors.white
+                : Theme.of(context).colorScheme.secondary,
+          ),
+          label: Text(
+            "Yêu thích",
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              color: updatedDeck.isFavorite
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.secondary,
+              fontSize: 12,
+            ),
+          ),
+          style: ElevatedButton.styleFrom(
+            elevation: 0,
+            backgroundColor: updatedDeck.isFavorite
+                ? Theme.of(context).colorScheme.secondary
+                : const Color.fromARGB(78, 253, 253, 253),
+            side: BorderSide(
+              color: updatedDeck.isFavorite
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.secondary,
+              width: 1,
+            ),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+          ),
+        );
       },
-      icon: Icon(
-        widget.deck.isFavorite ? Icons.favorite : Icons.favorite_border,
-        color: widget.deck.isFavorite
-            ? Colors.white
-            : Theme.of(context).colorScheme.secondary,
-      ),
-      label: Text(
-        "Yêu thích",
-        textAlign: TextAlign.center,
-        style: TextStyle(
-          color: widget.deck.isFavorite
-              ? Colors.white
-              : Theme.of(context).colorScheme.secondary,
-          fontSize: 12,
-        ),
-      ),
-      style: ElevatedButton.styleFrom(
-        elevation: 0, // Không đổ bóng
-        backgroundColor: widget.deck.isFavorite
-            ? Theme.of(context).colorScheme.secondary
-            : const Color.fromARGB(78, 253, 253, 253),
-        side: BorderSide(
-          color: widget.deck.isFavorite
-              ? Colors.white
-              : Theme.of(context).colorScheme.secondary,
-          width: 1,
-        ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.all(Radius.circular(20.0)),
-        ),
-        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-      ),
     );
   }
 }
