@@ -5,7 +5,7 @@ import '../shared/bot_nav_bar.dart';
 import 'deck_grid.dart';
 import 'decks_manager.dart';
 
-enum FilterOptions { all, sinhhoc, vatly, hoahoc, lichsu, dialy }
+enum FilterOptions { all, fav, sinhhoc, vatly, hoahoc, lichsu, dialy }
 
 class DecksOverviewScreen extends StatefulWidget {
   static const routeName = '/decks';
@@ -31,6 +31,7 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         title: Center(
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -130,6 +131,10 @@ class FilterMenu extends StatelessWidget {
                 child: Text('Tất cả bộ thẻ'),
               ),
               const PopupMenuItem(
+                value: FilterOptions.fav,
+                child: Text('Yêu thích'),
+              ),
+              const PopupMenuItem(
                 value: FilterOptions.sinhhoc,
                 child: Text('Sinh học'),
               ),
@@ -178,6 +183,9 @@ class TopicName extends StatelessWidget {
       case FilterOptions.dialy:
         title = 'CHỦ ĐỀ ĐỊA LÝ';
         break;
+      case FilterOptions.fav:
+        title = 'BỘ THẺ YÊU THÍCH';
+        break;
       default:
         title = 'TẤT CẢ BỘ THẺ';
     }
@@ -209,6 +217,9 @@ String? getFilter(FilterOptions filter) {
       break;
     case FilterOptions.dialy:
       type = 'Địa lý';
+      break;
+    case FilterOptions.fav:
+      type = 'Yêu thích';
       break;
     default:
   }

@@ -89,9 +89,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, right: 18.0, left: 18.0),
             child: LongButton(
-              text: 'Xem tất cả thẻ yêu thích',
-              icon: Icons.favorite,
-              onPressed: () {},
+              text: 'Xem tất cả thẻ được đánh dấu',
+              icon: Icons.star_rounded,
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  MarkedFlashcardsScreen.routeName,
+                  arguments: widget.deck.id,
+                );
+              },
             ),
           ),
           Padding(

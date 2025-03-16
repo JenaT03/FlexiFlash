@@ -71,7 +71,8 @@ class _EditFlashcardListScreenState extends State<EditFlashcardListScreen> {
               future: _fetchFlashcards,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
-                  return Expanded(child: FlashcardGrid(widget.deckId));
+                  return Expanded(
+                      child: FlashcardGrid(id: widget.deckId, 'edit'));
                 }
                 return const Center(
                   child: CircularProgressIndicator(),

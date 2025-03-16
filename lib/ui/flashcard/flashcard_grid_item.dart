@@ -6,11 +6,13 @@ import '../../models/flashcard.dart';
 
 class FlashcardGridItem extends StatelessWidget {
   const FlashcardGridItem(
-    this.flashcard, {
+    this.flashcard,
+    this.option, {
     super.key,
   });
 
   final Flashcard flashcard;
+  final String option;
 
   @override
   Widget build(BuildContext context) {
@@ -88,31 +90,38 @@ class FlashcardGridItem extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 5),
-          Expanded(
-              child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              IconButton(
-                onPressed: () => {
-                  Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
-                      arguments: {
-                        'deckId': flashcard.deckId,
-                        'flashcardId': flashcard.id
-                      }),
-                },
-                icon: Icon(Icons.edit),
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              IconButton(
-                onPressed: () => {
-                  if (flashManager.onDeleteFlashcard != null)
-                    {flashManager.onDeleteFlashcard!(context, flashcard)}
-                },
-                icon: Icon(Icons.delete),
-                color: Theme.of(context).colorScheme.error,
-              ),
-            ],
-          ))
+          option == 'edit'
+              ? Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      IconButton(
+                        onPressed: () => {
+                          Navigator.of(context).pushNamed(
+                              AddFlashCardScreen.routeName,
+                              arguments: {
+                                'deckId': flashcard.deckId,
+                                'flashcardId': flashcard.id
+                              }),
+                        },
+                        icon: Icon(Icons.edit),
+                        color: Theme.of(context).colorScheme.primary,
+                      ),
+                      IconButton(
+                        onPressed: () => {
+                          if (flashManager.onDeleteFlashcard != null)
+                            {
+                              flashManager.onDeleteFlashcard!(
+                                  context, flashcard)
+                            }
+                        },
+                        icon: Icon(Icons.delete),
+                        color: Theme.of(context).colorScheme.error,
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox(height: 20),
         ],
       ),
     );

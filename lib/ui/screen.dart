@@ -20,12 +20,14 @@ export 'flashcard/add_flashcard_screen.dart';
 export 'flashcard/flashcards_manager.dart';
 export 'flashcard/flashcard_grid.dart';
 export 'flashcard/edit_flashcard_list_screen.dart';
+export 'flashcard/marked_flashcards_screen.dart';
 
 export 'decks/user_decks_screen.dart';
 export 'decks/decks_manager.dart';
 export 'decks/decks_overview_screen.dart';
 export 'decks/add_deck_screen.dart';
 export 'decks/deck_detail_screen.dart';
+export 'decks/decks_favor_screen.dart';
 
 export 'splash_screen.dart';
 export 'auth/auth_screen.dart';

@@ -45,12 +45,16 @@ class AccountScreen extends StatelessWidget {
             LongButton(
               text: 'Bộ thẻ yêu thích',
               icon: Icons.favorite,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(DecksFavorScreen.routeName);
+              },
             ),
             LongButton(
               text: 'Bộ thẻ của bạn',
               icon: Icons.my_library_books_rounded,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(UserDecksScreen.routeName);
+              },
             ),
             const SizedBox(height: 30),
             Row(

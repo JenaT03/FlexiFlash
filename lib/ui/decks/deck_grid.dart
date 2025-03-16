@@ -32,6 +32,11 @@ class DeckGrid extends StatelessWidget {
           return deckManager.decks
               .where((deck) => deck.userId == user!.id!)
               .toList();
+        }
+        if (text == 'Yêu thích') {
+          return deckManager.decks
+              .where((deck) => deck.isFavorite == true)
+              .toList();
         } else {
           return deckManager.decks.where((deck) => deck.type == text).toList();
         }

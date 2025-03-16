@@ -108,7 +108,7 @@ class FlashcardManager with ChangeNotifier {
 
   Future<void> speak(Flashcard flashcard, String text) async {
     await _tts.setLanguage(flashcard.language);
-    await _tts.setSpeechRate(0.5); // Tốc độ đọc
+    await _tts.setSpeechRate(0.6); // Tốc độ đọc
     await _tts.speak(text);
   }
 

@@ -62,6 +62,9 @@ class MyApp extends StatelessWidget {
               DecksOverviewScreen.routeName: (ctx) => const SafeArea(
                     child: DecksOverviewScreen(),
                   ),
+              DecksFavorScreen.routeName: (ctx) => const SafeArea(
+                    child: DecksFavorScreen(),
+                  ),
             },
             onGenerateRoute: (settings) {
               if (settings.name == DeckDetailScreen.routeName) {
@@ -158,6 +161,19 @@ class MyApp extends StatelessWidget {
                           flashcard: ctx
                               .read<FlashcardManager>()
                               .findById(flashcardId)!,
+                        ),
+                      );
+                    });
+              }
+
+              if (settings.name == MarkedFlashcardsScreen.routeName) {
+                final deckId = settings.arguments as String;
+                return MaterialPageRoute(
+                    settings: settings,
+                    builder: (ctx) {
+                      return SafeArea(
+                        child: MarkedFlashcardsScreen(
+                          deckId,
                         ),
                       );
                     });
