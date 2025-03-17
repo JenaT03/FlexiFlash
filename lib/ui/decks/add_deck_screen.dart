@@ -98,9 +98,9 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                 child: ListView(
                   children: <Widget>[
                     _buildTitleDeck(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     _buildSelectType(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 30),
                     _buildDeckPreview(),
                   ],
                 ),
@@ -191,7 +191,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         Container(
           width: 100,
           height: 100,
-          margin: const EdgeInsets.only(top: 8, right: 10),
+          margin: const EdgeInsets.only(right: 10),
           decoration: BoxDecoration(
             border: Border.all(width: 1, color: Colors.grey),
           ),

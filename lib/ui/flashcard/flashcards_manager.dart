@@ -27,9 +27,6 @@ class FlashcardManager with ChangeNotifier {
   // Lấy flashcard theo deckId
   Future<List<Flashcard>> getFlashcardsByDeck(String deckId) async {
     await fetchFlashCards(deckId);
-    for (int i = 0; i < _flashcards.length; i++) {
-      print("Flashcard $i: ${_flashcards[i]}");
-    }
     return _flashcards
         .where((flashcard) => flashcard.deckId == deckId)
         .toList();

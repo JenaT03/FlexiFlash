@@ -46,7 +46,7 @@ class AccountScreen extends StatelessWidget {
               text: 'Bộ thẻ yêu thích',
               icon: Icons.favorite,
               onPressed: () {
-                Navigator.of(context).pushNamed(DecksFavorScreen.routeName);
+                Navigator.of(context).pushNamed(FavorDecksScreen.routeName);
               },
             ),
             LongButton(

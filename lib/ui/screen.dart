@@ -27,7 +27,7 @@ export 'decks/decks_manager.dart';
 export 'decks/decks_overview_screen.dart';
 export 'decks/add_deck_screen.dart';
 export 'decks/deck_detail_screen.dart';
-export 'decks/decks_favor_screen.dart';
+export 'decks/favor_decks_screen.dart';
 
 export 'splash_screen.dart';
 export 'auth/auth_screen.dart';

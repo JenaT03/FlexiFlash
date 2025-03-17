@@ -62,8 +62,8 @@ class MyApp extends StatelessWidget {
               DecksOverviewScreen.routeName: (ctx) => const SafeArea(
                     child: DecksOverviewScreen(),
                   ),
-              DecksFavorScreen.routeName: (ctx) => const SafeArea(
-                    child: DecksFavorScreen(),
+              FavorDecksScreen.routeName: (ctx) => const SafeArea(
+                    child: FavorDecksScreen(),
                   ),
             },
             onGenerateRoute: (settings) {

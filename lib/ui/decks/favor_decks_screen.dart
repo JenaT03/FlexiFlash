@@ -4,15 +4,15 @@ import 'package:provider/provider.dart';
 import '../screen.dart';
 import 'deck_grid.dart';
 
-class DecksFavorScreen extends StatefulWidget {
+class FavorDecksScreen extends StatefulWidget {
   static const routeName = '/favorite_decks';
-  const DecksFavorScreen({super.key});
+  const FavorDecksScreen({super.key});
 
   @override
-  State<DecksFavorScreen> createState() => _DecksFavorScreenState();
+  State<FavorDecksScreen> createState() => _FavorDecksScreenState();
 }
 
-class _DecksFavorScreenState extends State<DecksFavorScreen> {
+class _FavorDecksScreenState extends State<FavorDecksScreen> {
   late Future<void> _fetchDecks;
 
   @override
