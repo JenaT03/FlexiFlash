@@ -10,6 +10,7 @@ export 'shared/theme_provider.dart';
 export 'shared/dialog_utils.dart';
 export 'shared/app_theme.dart';
 export 'shared/theme_button.dart';
+export 'shared/page_transition.dart';
 
 export 'flashcard/flashcard.dart';
 export 'flashcard/flashcard_screen.dart';

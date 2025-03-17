@@ -26,14 +26,22 @@ class _BotNavBarState extends State<BotNavBar> {
 
     switch (index) {
       case 0:
-        Navigator.of(context).pushReplacementNamed(UserDecksScreen.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          UserDecksScreen.routeName,
+          (route) => false,
+        );
         break;
       case 1:
-        Navigator.of(context)
-            .pushReplacementNamed(DecksOverviewScreen.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          DecksOverviewScreen.routeName,
+          (route) => false,
+        );
         break;
       case 2:
-        Navigator.of(context).pushReplacementNamed(AccountScreen.routeName);
+        Navigator.of(context).pushNamedAndRemoveUntil(
+          AccountScreen.routeName,
+          (route) => false,
+        );
         break;
     }
   }
