@@ -69,29 +69,23 @@ class MyApp extends StatelessWidget {
             onGenerateRoute: (settings) {
               if (settings.name == DeckDetailScreen.routeName) {
                 final deckId = settings.arguments as String;
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: DeckDetailScreen(
-                          ctx.read<DecksManager>().findById(deckId)!,
-                        ),
-                      );
-                    });
+                return PageScaleTransition(
+                  settings: settings,
+                  page: DeckDetailScreen(
+                    ctx.read<DecksManager>().findById(deckId)!,
+                  ),
+                );
               }
               if (settings.name == AddDeckScreen.routeName) {
                 final deckId = settings.arguments as String?;
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: AddDeckScreen(
-                          deckId != null
-                              ? ctx.read<DecksManager>().findById(deckId)
-                              : null,
-                        ),
-                      );
-                    });
+                return PageScaleTransition(
+                  settings: settings,
+                  page: AddDeckScreen(
+                    deckId != null
+                        ? ctx.read<DecksManager>().findById(deckId)
+                        : null,
+                  ),
+                );
               }
 
               if (settings.name == AddFlashCardScreen.routeName) {
@@ -99,33 +93,25 @@ class MyApp extends StatelessWidget {
                 final String deckId = arguments!['deckId'];
                 final String? flashcardId = arguments['flashcardId'];
 
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: AddFlashCardScreen(
-                          deckId: deckId,
-                          flashcardId != null
-                              ? ctx
-                                  .read<FlashcardManager>()
-                                  .findById(flashcardId)
-                              : null,
-                        ),
-                      );
-                    });
+                return PageFromRightTransition(
+                  settings: settings,
+                  page: AddFlashCardScreen(
+                    deckId: deckId,
+                    flashcardId != null
+                        ? ctx.read<FlashcardManager>().findById(flashcardId)
+                        : null,
+                  ),
+                );
               }
 
               if (settings.name == EditFlashcardListScreen.routeName) {
                 final deckId = settings.arguments as String;
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: EditFlashcardListScreen(
-                          deckId: deckId,
-                        ),
-                      );
-                    });
+                return PageFromLeftTransition(
+                  settings: settings,
+                  page: EditFlashcardListScreen(
+                    deckId: deckId,
+                  ),
+                );
               }
 
               if (settings.name == FlashcardScreen.routeName) {
@@ -140,43 +126,30 @@ class MyApp extends StatelessWidget {
                   );
                 }
 
-                return MaterialPageRoute(
+                return PageScaleTransition(
                   settings: settings,
-                  builder: (ctx) {
-                    return SafeArea(
-                      child: FlashcardScreen(deckId: deckId),
-                    );
-                  },
+                  page: FlashcardScreen(deckId: deckId),
                 );
               }
 
               if (settings.name == FlashCardDetail.routeName) {
                 final flashcardId = settings.arguments as String;
 
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: FlashCardDetail(
-                          flashcard: ctx
-                              .read<FlashcardManager>()
-                              .findById(flashcardId)!,
-                        ),
-                      );
-                    });
+                return PageScaleTransition(
+                  settings: settings,
+                  page: FlashCardDetail(
+                    flashcard:
+                        ctx.read<FlashcardManager>().findById(flashcardId)!,
+                  ),
+                );
               }
 
               if (settings.name == MarkedFlashcardsScreen.routeName) {
                 final deckId = settings.arguments as String;
-                return MaterialPageRoute(
-                    settings: settings,
-                    builder: (ctx) {
-                      return SafeArea(
-                        child: MarkedFlashcardsScreen(
-                          deckId,
-                        ),
-                      );
-                    });
+                return PageScaleTransition(
+                  settings: settings,
+                  page: MarkedFlashcardsScreen(deckId),
+                );
               }
               return null;
             },
