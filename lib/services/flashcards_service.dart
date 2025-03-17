@@ -160,4 +160,25 @@ class FlashcardsService {
       return false;
     }
   }
+
+  Future<List<Flashcard>> fetchMarkedFlashcards() async {
+    final List<Flashcard> flashcards = [];
+    try {
+      final client = await LaravelApiClient.getInstance();
+
+      final response = await client.dio.get('/marked-flashcards');
+      if (response.statusCode == 200) {
+        final data = response.data['flashcards'] as List;
+        for (final flashcardData in data) {
+          Flashcard flashcard = Flashcard.fromJson(flashcardData);
+          flashcards.add(customeUrl(flashcard));
+        }
+      }
+
+      return flashcards;
+    } catch (error) {
+      print('Error fetching marked flashcards: $error');
+      return flashcards;
+    }
+  }
 }
