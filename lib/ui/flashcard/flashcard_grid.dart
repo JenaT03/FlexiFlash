@@ -14,9 +14,9 @@ class FlashcardGrid extends StatelessWidget {
   Widget build(BuildContext context) {
     final flashcards =
         context.select<FlashcardManager, List<Flashcard>>((flashcardManager) {
-      if (id == null)
-        return [];
-      else {
+      if (id == null) {
+        return flashcardManager.flashcards.toList();
+      } else {
         if (option == 'marked') {
           return flashcardManager.flashcards
               .where((flashcard) => flashcard.isMarked == true)

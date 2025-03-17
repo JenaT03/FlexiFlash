@@ -50,10 +50,11 @@ class AccountScreen extends StatelessWidget {
               },
             ),
             LongButton(
-              text: 'Bộ thẻ của bạn',
-              icon: Icons.my_library_books_rounded,
+              text: 'Tất cả thẻ được đánh dấu',
+              icon: Icons.star_rounded,
               onPressed: () {
-                Navigator.of(context).pushNamed(UserDecksScreen.routeName);
+                Navigator.of(context)
+                    .pushNamed(MarkedFlashcardsScreen.routeName);
               },
             ),
             const SizedBox(height: 30),

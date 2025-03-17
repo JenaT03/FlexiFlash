@@ -87,6 +87,11 @@ class FlashcardManager with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchMarkedFlashCards() async {
+    _flashcards = await _flashcardsService.fetchMarkedFlashcards();
+    notifyListeners();
+  }
+
   // Đếm số flashcard trong một deck
   Future<int> countFlashcardsInDeck(String deckId) async {
     await fetchFlashCards(deckId);

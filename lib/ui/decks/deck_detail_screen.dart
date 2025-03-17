@@ -108,29 +108,28 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
             ),
           ),
           const SizedBox(height: 20),
-          if (!widget.deck.isSuperUser)
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ShortButton(
-                  text: "Sửa bộ thẻ",
-                  onPressed: () => {
-                    Navigator.of(context).pushNamed(
-                      AddDeckScreen.routeName,
-                      arguments: widget.deck.id,
-                    )
-                  },
-                ),
-                WarningButton(
-                  text: "Xóa bộ thẻ",
-                  onPressed: () async {
-                    if (mounted) {
-                      await showConfirmDialog(context, widget.deck);
-                    }
-                  },
-                )
-              ],
-            )
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ShortButton(
+                text: "Sửa bộ thẻ",
+                onPressed: () => {
+                  Navigator.of(context).pushNamed(
+                    AddDeckScreen.routeName,
+                    arguments: widget.deck.id,
+                  )
+                },
+              ),
+              WarningButton(
+                text: "Xóa bộ thẻ",
+                onPressed: () async {
+                  if (mounted) {
+                    await showConfirmDialog(context, widget.deck);
+                  }
+                },
+              )
+            ],
+          )
         ],
       ),
       bottomNavigationBar:

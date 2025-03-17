@@ -145,7 +145,7 @@ class MyApp extends StatelessWidget {
               }
 
               if (settings.name == MarkedFlashcardsScreen.routeName) {
-                final deckId = settings.arguments as String;
+                final deckId = settings.arguments as String?;
                 return PageScaleTransition(
                   settings: settings,
                   page: MarkedFlashcardsScreen(deckId),

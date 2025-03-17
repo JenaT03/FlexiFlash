@@ -17,8 +17,13 @@ class _MarkedFlashcardsScreenState extends State<MarkedFlashcardsScreen> {
 
   void initState() {
     super.initState();
-    _fetchFlashcards =
-        context.read<FlashcardManager>().fetchFlashCards(widget.deckId!);
+    if (widget.deckId == null) {
+      _fetchFlashcards =
+          context.read<FlashcardManager>().fetchMarkedFlashCards();
+    } else {
+      _fetchFlashcards =
+          context.read<FlashcardManager>().fetchFlashCards(widget.deckId!);
+    }
   }
 
   @override
