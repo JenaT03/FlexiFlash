@@ -38,8 +38,13 @@ class AccountScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             LongButton(
-              text: 'Chỉnh sửa tài khoản',
-              icon: Icons.edit,
+              text: 'Chỉnh sửa email',
+              icon: Icons.email_rounded,
+              onPressed: () {},
+            ),
+            LongButton(
+              text: 'Đổi mật khẩu',
+              icon: Icons.security_rounded,
               onPressed: () {},
             ),
             LongButton(

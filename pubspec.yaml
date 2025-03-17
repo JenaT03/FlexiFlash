@@ -24,6 +24,9 @@ dependencies:
   path: ^1.9.0
   path_provider: ^2.1.2
   flutter_tts: ^3.8.5
+  flutter_launcher_icons: ^0.14.3
+  lottie: ^2.7.0
+
 
 dev_dependencies:
   flutter_test:
@@ -35,6 +38,7 @@ flutter:
   assets:
     - .env
     - assets/images/
+    - assets/json/loading.json
   fonts:
     - family: Inter
       fonts:
@@ -42,4 +46,10 @@ flutter:
         - asset: assets/fonts/Inter_18pt-Regular.ttf
         - asset: assets/fonts/Inter_18pt-Bold.ttf
           weight: 700
-    
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/launcher_icon.png"
+  adaptive_icon_foreground: "assets/images/launcher_icon.png"
+  adaptive_icon_background: "#ffffff"
