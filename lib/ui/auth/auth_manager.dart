@@ -42,6 +42,27 @@ class AuthManager with ChangeNotifier {
     }
   }
 
+  String? getEmail() {
+    return _loggedInUser?.email;
+  }
+
+  Future<void> changeEmail(String email) async {
+    final user = await _authService.changeEmail(email);
+
+    if (_loggedInUser != null) {
+      _loggedInUser = user;
+      notifyListeners();
+    }
+  }
+
+  Future<bool?> changePass(
+      String currentPass, String newPass, String confirmPass) async {
+    final result =
+        await _authService.changePass(currentPass, newPass, confirmPass);
+
+    return result;
+  }
+
   Future<void> logout() {
     return _authService.logout();
   }

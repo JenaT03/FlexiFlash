@@ -88,6 +88,50 @@ Future<void> showErrorDialog(BuildContext context, String message) {
   );
 }
 
+Future<bool?> showSucessDialog(BuildContext context, String message) {
+  final primaryColor = Theme.of(context).colorScheme.primary;
+
+  return showDialog(
+    context: context,
+    builder: (ctx) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+      title: Text(
+        'Thành công ☺️',
+        textAlign: TextAlign.center,
+        style: TextStyle(
+            fontSize: 24, fontWeight: FontWeight.bold, color: primaryColor),
+      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SizedBox(height: 10),
+          Text(
+            message,
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          const SizedBox(height: 10),
+        ],
+      ),
+      actions: <Widget>[
+        Row(
+          mainAxisAlignment: MainAxisAlignment.end,
+          children: [
+            CustFilledButton(
+              text: 'Okey',
+              onPressed: () {
+                Navigator.of(ctx).pop();
+              },
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
 class ActionButton extends StatelessWidget {
   const ActionButton({
     super.key,

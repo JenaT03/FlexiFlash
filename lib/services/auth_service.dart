@@ -1,3 +1,5 @@
+import 'dart:ffi';
+
 import 'package:dio/dio.dart';
 import 'dart:async';
 import '../models/user.dart';
@@ -115,6 +117,49 @@ class AuthService {
       await client.clearToken();
       _authStateController.add(null);
       return null;
+    }
+  }
+
+  Future<User?> changeEmail(String email) async {
+    final client = await LaravelApiClient.getInstance();
+    try {
+      final response = await client.dio.post(
+        '/changeEmail',
+        data: FormData.fromMap({
+          'email': email,
+          '_method': 'PATCH',
+        }),
+      );
+
+      if (response.statusCode == 200) {
+        final user = User.fromJson(response.data['user']);
+        return user;
+      }
+    } catch (e) {
+      print('Lỗi thay đổi email $e');
+      return null;
+    }
+  }
+
+  Future<bool?> changePass(
+      String currentPass, String newPass, String confirmPass) async {
+    final client = await LaravelApiClient.getInstance();
+    try {
+      final response = await client.dio.post(
+        '/changePassword',
+        data: FormData.fromMap({
+          'current_password': currentPass,
+          'new_password': newPass,
+          'new_password_confirmation': confirmPass,
+          '_method': 'PATCH',
+        }),
+      );
+      if (response.statusCode == 200) {
+        return true;
+      }
+    } catch (e) {
+      print('Lỗi thay đổi mật khẩu $e');
+      return false;
     }
   }
 

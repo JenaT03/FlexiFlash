@@ -146,7 +146,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
       decoration: const InputDecoration(
         labelText: 'Tên bộ thẻ',
         filled: false,
-        border: UnderlineInputBorder(),
+        border: OutlineInputBorder(),
       ),
       textInputAction: TextInputAction.next,
       autofocus: true,

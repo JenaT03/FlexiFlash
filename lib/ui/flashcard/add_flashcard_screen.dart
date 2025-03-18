@@ -150,7 +150,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
       decoration: const InputDecoration(
         labelText: 'Tên thẻ',
         filled: false,
-        border: UnderlineInputBorder(),
+        border: OutlineInputBorder(),
       ),
       textInputAction: TextInputAction.next,
       autofocus: true,
@@ -268,9 +268,9 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
       decoration: const InputDecoration(
         labelText: 'Mô tả',
         filled: false,
-        border: UnderlineInputBorder(),
+        border: OutlineInputBorder(),
       ),
-      maxLines: 4,
+      maxLines: 8,
       keyboardType: TextInputType.multiline,
       onSaved: (value) {
         _addedflashcard = _addedflashcard.copyWith(description: value);

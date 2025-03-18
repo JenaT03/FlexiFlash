@@ -1,6 +1,9 @@
 export 'auth/login.dart';
 export 'auth/register.dart';
 export 'auth/account_screen.dart';
+export 'auth/auth_manager.dart';
+export 'auth/edit_email_screen.dart';
+export 'auth/edit_password_screen.dart';
 
 export 'shared/bot_nav_bar.dart';
 export 'shared/long_button.dart';

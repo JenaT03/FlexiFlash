@@ -12,9 +12,8 @@ class AccountScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        // backgroundColor: const Color(0xFFFF9431),
+        centerTitle: true,
         title: Center(
-          // Wrap Row trong Center widget
           child: Row(
             mainAxisAlignment:
                 MainAxisAlignment.center, // Căn giữa các children trong Row
@@ -40,12 +39,16 @@ class AccountScreen extends StatelessWidget {
             LongButton(
               text: 'Chỉnh sửa email',
               icon: Icons.email_rounded,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditEmailScreen.routeName);
+              },
             ),
             LongButton(
               text: 'Đổi mật khẩu',
               icon: Icons.security_rounded,
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(EditPasswordScreen.routeName);
+              },
             ),
             LongButton(
               text: 'Bộ thẻ yêu thích',
