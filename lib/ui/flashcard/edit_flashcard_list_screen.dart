@@ -74,9 +74,7 @@ class _EditFlashcardListScreenState extends State<EditFlashcardListScreen> {
                   return Expanded(
                       child: FlashcardGrid(id: widget.deckId, 'edit'));
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return CustomProgressIndicator();
               }),
         ],
       ),

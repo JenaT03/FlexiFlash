@@ -60,9 +60,7 @@ class _MarkedFlashcardsScreenState extends State<MarkedFlashcardsScreen> {
                 return Expanded(
                     child: FlashcardGrid('marked', id: widget.deckId));
               }
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
+              return const CustomProgressIndicator();
             },
           )
         ],

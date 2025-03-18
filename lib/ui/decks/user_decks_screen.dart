@@ -58,7 +58,7 @@ class _UserDecksScreenState extends State<UserDecksScreen> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                'BỘ THẺ CỦA BẠN',
+                'BỘ THẺ ĐƯỢC TẠO GẦN ĐÂY',
                 style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -72,12 +72,10 @@ class _UserDecksScreenState extends State<UserDecksScreen> {
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   return Expanded(
-                    child: DeckGrid('yours'),
+                    child: DeckGrid('latest'),
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const CustomProgressIndicator();
               })
           // Scrollable grid of cards
         ],

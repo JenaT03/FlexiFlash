@@ -16,7 +16,6 @@ class DeckGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    User? user = context.read<AuthManager>().user;
     final decks = context.select<DecksManager, List<Deck>>(
       (deckManager) {
         if (text.isEmpty) {
@@ -28,9 +27,13 @@ class DeckGrid extends StatelessWidget {
                   deck.title.toLowerCase().contains(text.toLowerCase()))
               .toList();
         }
-        if (text == 'yours') {
+        if (text == 'latest') {
+          final DateTime now = DateTime.now();
+          final DateTime sevenDaysAgo = now.subtract(Duration(days: 7));
           return deckManager.decks
-              .where((deck) => deck.userId == user!.id!)
+              .where((deck) =>
+                  deck.createdAt != null &&
+                  deck.createdAt!.isAfter(sevenDaysAgo))
               .toList();
         }
         if (text == 'Yêu thích') {

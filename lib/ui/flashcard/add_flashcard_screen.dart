@@ -28,6 +28,7 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
   final _addForm = GlobalKey<FormState>();
   late Flashcard _addedflashcard;
   late String _deckId;
+  bool _isSaving = false;
 
   bool _isValidImageUrl(String value) {
     return (value.startsWith('http') || value.startsWith('https')) &&
@@ -108,11 +109,13 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                     children: [
                       ShortButton(
                         text: "Hoàn thành",
-                        onPressed: () => _saveForm('finish'),
+                        onPressed: _isSaving ? null : () => _saveForm('finish'),
+                        isDisabled: _isSaving,
                       ),
                       ShortButton(
                         text: "Tiếp tục",
-                        onPressed: () => _saveForm('next'),
+                        onPressed: _isSaving ? null : () => _saveForm('next'),
+                        isDisabled: _isSaving,
                       ),
                     ],
                   )
@@ -121,7 +124,9 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
                     children: [
                       ShortButton(
                         text: "Lưu",
-                        onPressed: () => _saveForm('save edit'),
+                        onPressed:
+                            _isSaving ? null : () => _saveForm('save edit'),
+                        isDisabled: _isSaving,
                       ),
                     ],
                   )
@@ -282,6 +287,11 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
       return;
     }
 
+    if (!mounted) return; // Kiểm tra trước khi gọi setState
+    setState(() {
+      _isSaving = true;
+    });
+
     _addForm.currentState!.save();
     try {
       final flashcardManager = context.read<FlashcardManager>();
@@ -292,23 +302,32 @@ class _AddFlashCardScreenState extends State<AddFlashCardScreen> {
         await flashcardManager.updateFlashcard(_addedflashcard, _deckId);
       }
 
-      if (mounted) {
-        if (text == 'next') {
-          Navigator.of(context).pushNamed(AddFlashCardScreen.routeName,
-              arguments: {'deckId': _deckId});
-        } else {
-          if (text == 'finish') {
-            int count = await flashcardManager.countFlashcardsInDeck(_deckId);
-            await showFinishDialog(context, count, _deckId);
-          } else {
-            Navigator.of(context).pushReplacementNamed(
-                EditFlashcardListScreen.routeName,
-                arguments: _deckId);
-          }
-        }
+      if (!mounted) return;
+
+      if (text == 'next') {
+        Navigator.of(context).pushNamed(
+          AddFlashCardScreen.routeName,
+          arguments: {'deckId': _deckId},
+        );
+      } else if (text == 'finish') {
+        int count = await flashcardManager.countFlashcardsInDeck(_deckId);
+        await showFinishDialog(context, count, _deckId);
+      } else {
+        Navigator.of(context).pushReplacementNamed(
+          EditFlashcardListScreen.routeName,
+          arguments: _deckId,
+        );
       }
     } catch (error) {
-      await showErrorDialog(context, 'Xin lỗi không thể lưu thẻ này');
+      if (mounted) {
+        await showErrorDialog(context, 'Xin lỗi không thể lưu thẻ này');
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
     }
   }
 

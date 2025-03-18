@@ -5,10 +5,12 @@ class ShortButton extends StatelessWidget {
     super.key,
     required this.text,
     this.onPressed,
+    this.isDisabled = false,
   });
 
   final String text;
   final void Function()? onPressed;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +21,14 @@ class ShortButton extends StatelessWidget {
         child: SizedBox(
           width: 160, // Đặt chiều rộng cố định
           child: ElevatedButton(
-            onPressed: onPressed,
+            onPressed: isDisabled ? null : onPressed,
             style: ElevatedButton.styleFrom(
-              backgroundColor: Theme.of(context).colorScheme.secondary,
-              foregroundColor: Theme.of(context).colorScheme.onSecondary,
+              backgroundColor: isDisabled
+                  ? Colors.grey // Màu xám khi disable
+                  : Theme.of(context).colorScheme.secondary,
+              foregroundColor: isDisabled
+                  ? Colors.white
+                  : Theme.of(context).colorScheme.onSecondary,
               padding: const EdgeInsets.symmetric(vertical: 10),
             ),
             child: Text(

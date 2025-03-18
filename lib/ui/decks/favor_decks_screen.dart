@@ -56,9 +56,7 @@ class _FavorDecksScreenState extends State<FavorDecksScreen> {
                     child: DeckGrid('Yêu thích'),
                   );
                 }
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
+                return const CustomProgressIndicator();
               })
         ],
       ),

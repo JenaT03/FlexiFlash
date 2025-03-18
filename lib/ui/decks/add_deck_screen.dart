@@ -26,6 +26,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
   final _imageUrlFocusNode = FocusNode();
   final _addForm = GlobalKey<FormState>();
   late Deck _addedDeck;
+  bool _isSaving = false;
 
   bool _isValidImageUrl(String value) {
     return (value.startsWith('http') || value.startsWith('https')) &&
@@ -112,7 +113,8 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                       Spacer(),
                       ShortButton(
                         text: "Tiếp tục",
-                        onPressed: _saveForm,
+                        onPressed: _isSaving ? null : () => _saveForm(),
+                        isDisabled: _isSaving,
                       ),
                     ],
                   )
@@ -127,7 +129,8 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
                       ),
                       ShortButton(
                         text: "Lưu",
-                        onPressed: _saveForm,
+                        onPressed: _isSaving ? null : () => _saveForm(),
+                        isDisabled: _isSaving,
                       ),
                     ],
                   )
@@ -250,6 +253,11 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
           context, 'Có vấn đề với nội dung của bạn, vui lòng xem lại');
       return;
     }
+
+    if (!mounted) return;
+    setState(() {
+      _isSaving = true;
+    });
     _addForm.currentState!.save();
 
     try {
@@ -274,6 +282,12 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
     } catch (error) {
       print("Lỗi xảy ra: $error");
       await showErrorDialog(context, 'Xin lỗi không thể lưu bộ thẻ này');
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isSaving = false;
+        });
+      }
     }
   }
 }

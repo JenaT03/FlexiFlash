@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../shared/bot_nav_bar.dart';
 import 'deck_grid.dart';
-import 'decks_manager.dart';
+import '../screen.dart';
 
 enum FilterOptions { all, fav, sinhhoc, vatly, hoahoc, lichsu, dialy }
 
@@ -95,7 +94,7 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
                     );
                   }
                   return const Center(
-                    child: CircularProgressIndicator(),
+                    child: CustomProgressIndicator(),
                   );
                 }),
           ],

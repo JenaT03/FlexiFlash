@@ -73,7 +73,7 @@ class _FlashcardScreenState extends State<FlashcardScreen> {
         future: _flashcardsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return CustomProgressIndicator();
           }
           if (snapshot.hasError) {
             return Center(child: Text("Lỗi: ${snapshot.error}"));
