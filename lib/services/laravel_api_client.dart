@@ -15,8 +15,8 @@ class LaravelApiClient {
 
     final baseUrl = dotenv.env['LARAVEL_API_URL'] ?? 'http://10.0.2.2:8000/api';
     _dio.options.baseUrl = baseUrl;
-    _dio.options.connectTimeout = const Duration(seconds: 15);
-    _dio.options.receiveTimeout = const Duration(seconds: 15);
+    _dio.options.connectTimeout = const Duration(seconds: 30);
+    _dio.options.receiveTimeout = const Duration(seconds: 60);
     _dio.options.headers = {
       'Accept': 'application/json',
       'Content-Type': 'application/json',

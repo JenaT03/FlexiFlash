@@ -2,10 +2,11 @@ import 'package:dio/dio.dart';
 import 'dart:async';
 import '../models/flashcard.dart';
 import './laravel_api_client.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class FlashcardsService {
   Flashcard customeUrl(Flashcard initFlashcard) {
-    final String storageUrl =
+    final String storageUrl = dotenv.env['LARAVEL_STORAGE_URL'] ??
         'http://10.3.2.37:8000/storage/'; // http://10.0.2.2:8000/storage/ trên VM
     Flashcard flashcard = initFlashcard;
     flashcard = flashcard.copyWith(imgURL: "$storageUrl${flashcard.imgURL}");
