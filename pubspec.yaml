@@ -26,6 +26,7 @@ dependencies:
   flutter_tts: ^3.8.5
   flutter_launcher_icons: ^0.14.3
   lottie: ^2.7.0
+  fl_chart: ^0.63.0
 
 
 dev_dependencies:
@@ -38,7 +39,7 @@ flutter:
   assets:
     - .env
     - assets/images/
-    - assets/json/loading.json
+    - assets/animations/loading.json
   fonts:
     - family: Inter
       fonts:

@@ -156,6 +156,12 @@ class MyApp extends StatelessWidget {
                   page: MarkedFlashcardsScreen(deckId),
                 );
               }
+
+              if (settings.name == Quiz.routeName) {
+                final deckId = settings.arguments as String;
+                return PageScaleTransition(
+                    settings: settings, page: Quiz(deckId: deckId));
+              }
               return null;
             },
           );

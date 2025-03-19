@@ -32,6 +32,10 @@ class FlashcardManager with ChangeNotifier {
         .toList();
   }
 
+  List<Flashcard> getFlashcards() {
+    return _flashcards.toList();
+  }
+
   // Thêm flashcard mới
   Future<void> addFlashcard(String id, Flashcard flashcard) async {
     final newFlashcard =
@@ -84,6 +88,12 @@ class FlashcardManager with ChangeNotifier {
 
   Future<void> fetchFlashCards(String deckId) async {
     _flashcards = await _flashcardsService.fetchFlashcards(deckId: deckId);
+    notifyListeners();
+  }
+
+  Future<void> fetchAndShuffleFlashcards(String deckId) async {
+    await fetchFlashCards(deckId);
+    _flashcards = List.from(_flashcards)..shuffle();
     notifyListeners();
   }
 

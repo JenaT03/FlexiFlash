@@ -102,9 +102,14 @@ class _DeckDetailScreenState extends State<DeckDetailScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 10.0, right: 18.0, left: 18.0),
             child: LongButton(
-              text: 'Trắc nghiệm hình ảnh',
-              icon: Icons.ads_click,
-              onPressed: () {},
+              text: 'Câu hỏi hình ảnh',
+              icon: Icons.question_mark_rounded,
+              onPressed: () {
+                Navigator.of(context).pushNamed(
+                  Quiz.routeName,
+                  arguments: widget.deck.id,
+                );
+              },
             ),
           ),
           const SizedBox(height: 20),
