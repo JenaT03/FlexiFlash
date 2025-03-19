@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import 'deck_grid.dart';
 import '../screen.dart';
 
-enum FilterOptions { all, fav, sinhhoc, vatly, hoahoc, lichsu, dialy }
+enum FilterOptions { all, fav, sinhhoc, vatly, hoahoc, lichsu, dialy, khac }
 
 class DecksOverviewScreen extends StatefulWidget {
   static const routeName = '/decks';
@@ -41,7 +41,7 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 40, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 30, left: 10, right: 10),
         child: Column(
           children: [
             Row(
@@ -58,7 +58,7 @@ class _DecksOverviewScreenState extends State<DecksOverviewScreen> {
                 )
               ],
             ),
-            const SizedBox(height: 30),
+            const SizedBox(height: 10),
             Padding(
               padding: const EdgeInsets.all(6.0),
               child: TextField(
@@ -153,6 +153,10 @@ class FilterMenu extends StatelessWidget {
                 value: FilterOptions.dialy,
                 child: Text('Địa lý'),
               ),
+              const PopupMenuItem(
+                value: FilterOptions.khac,
+                child: Text('Khác'),
+              ),
             ]);
   }
 }
@@ -184,6 +188,9 @@ class TopicName extends StatelessWidget {
         break;
       case FilterOptions.fav:
         title = 'BỘ THẺ YÊU THÍCH';
+        break;
+      case FilterOptions.khac:
+        title = 'CHỦ ĐỀ KHÁC';
         break;
       default:
         title = 'TẤT CẢ BỘ THẺ';
@@ -219,6 +226,9 @@ String? getFilter(FilterOptions filter) {
       break;
     case FilterOptions.fav:
       type = 'Yêu thích';
+      break;
+    case FilterOptions.khac:
+      type = 'Khác';
       break;
     default:
   }

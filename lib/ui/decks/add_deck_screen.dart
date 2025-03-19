@@ -176,6 +176,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         DropdownMenuItem(value: "Hóa học", child: Text("Hóa học")),
         DropdownMenuItem(value: "Lịch sử", child: Text("Lịch sử")),
         DropdownMenuItem(value: "Địa lý", child: Text("Địa lý")),
+        DropdownMenuItem(value: "Khác", child: Text("Khác")),
       ],
       validator: (value) => value == null ? 'Vui lòng chọn một giá trị' : null,
       onChanged: (value) {
