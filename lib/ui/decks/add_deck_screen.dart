@@ -72,7 +72,7 @@ class _AddDeckScreenState extends State<AddDeckScreen> {
         ),
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 40, left: 10, right: 10),
+        margin: EdgeInsets.only(top: 30, left: 10, right: 10),
         child: Column(
           children: [
             _addedDeck.id == null

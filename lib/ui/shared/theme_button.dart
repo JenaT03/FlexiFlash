@@ -12,7 +12,6 @@ class ThemeButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeProvider = Provider.of<ThemeProvider>(context);
     final isDark = themeProvider.themeMode == ThemeMode.dark;
-
     return FlutterSwitch(
       width: 70,
       height: 35,

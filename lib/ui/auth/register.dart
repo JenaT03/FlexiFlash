@@ -40,10 +40,11 @@ class _RegisterState extends State<Register> {
             _authData['email']!,
             _authData['password']!,
           );
+      await showSucessDialog(context, 'Tạo tài khoản thành công hãy đăng nhập');
     } catch (error) {
       log('$error');
       if (mounted) {
-        showErrorDialog(context, error.toString());
+        showErrorDialog(context, 'Email đã tồn tại');
       }
     }
 

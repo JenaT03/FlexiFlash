@@ -38,6 +38,16 @@ class _EditFlashcardListScreenState extends State<EditFlashcardListScreen> {
             ],
           ),
         ),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back, size: 30),
+          onPressed: () {
+            Navigator.of(context).pushNamedAndRemoveUntil(
+              DeckDetailScreen.routeName,
+              arguments: widget.deckId,
+              (route) => false,
+            );
+          },
+        ),
         actions: <Widget>[
           IconButton(
             onPressed: () => {

@@ -43,7 +43,7 @@ class _LoginState extends State<Login> {
     } catch (error) {
       log('$error');
       if (mounted) {
-        showErrorDialog(context, error.toString());
+        showInforDialog(context, error.toString());
       }
     }
 

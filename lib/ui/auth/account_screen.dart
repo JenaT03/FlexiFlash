@@ -84,8 +84,8 @@ class AccountScreen extends StatelessWidget {
               onPressed: () {
                 // Đăng xuất
                 context.read<AuthManager>().logout();
-                // Pop màn hình hiện tại
-                Navigator.of(context).pop();
+                SplashScreen();
+
                 // Sau đó push màn hình mới (không dùng replacement)
                 Navigator.of(context).pushNamed('/');
               },
