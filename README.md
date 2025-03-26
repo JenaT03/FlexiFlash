@@ -1,5 +1,5 @@
 <h1> FlexiFlash ✨</h1>
-<br>
+
 <h3>Introduction</h3>
 <p>According to various studies, images are processed by the brain faster and help stimulate multiple senses, enhancing memory retention. Therefore, the FlexiFlash application is designed to integrate images into each flashcard, optimizing the learning and memorization process. 
 </p>
@@ -9,7 +9,7 @@
 
 <p> This project is a collaborative effort between me and my classmate- Le Truong Ngoc Duyen, aiming to build an effective and user-friendly flashcard application.</p>
 
-<br>
+<hr>
 
 <h3>Technologies Used</h3>
 <ul> 
@@ -18,7 +18,7 @@
     <li>Local Development Environment: Laragon</li>
 </ul>
 
-<br>
+<hr>
 
 <h3>Features</h3>
 <ul> 
